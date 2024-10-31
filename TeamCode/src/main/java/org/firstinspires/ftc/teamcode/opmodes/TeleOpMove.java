@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.VegaTestHardwareRookie;
+import org.firstinspires.ftc.teamcode.hardware.Motors;
 
+@TeleOp
 public class TeleOpMove extends OpMode {
-    public VegaTestHardwareRookie bobot;
+    public Motors bobot;
 
     @Override
     public void init() {
-        bobot = new VegaTestHardwareRookie(hardwareMap);
+        bobot = new Motors(hardwareMap);
     }
 
     @Override
