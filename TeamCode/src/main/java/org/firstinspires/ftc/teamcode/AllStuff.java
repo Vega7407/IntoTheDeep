@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class AllStuff extends LinearOpMode {
+    //AAAAAAAAAAAAAAAA
+
     Servo claw;
     Servo clawWrist;
     DcMotorEx slides;
