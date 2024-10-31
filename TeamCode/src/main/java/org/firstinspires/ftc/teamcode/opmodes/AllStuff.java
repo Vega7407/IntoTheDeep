@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 //test test test
 @TeleOp
 public class AllStuff extends LinearOpMode {
+    //AAAAAAAAAAAAAAAA
+
     Servo claw;
     Servo clawWrist;
     DcMotorEx slides;

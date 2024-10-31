@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.teamcode.hardware.VegaTestHardwareRookie;
 
 public class TeleOpMove extends OpMode {
     public VegaTestHardwareRookie bobot;
