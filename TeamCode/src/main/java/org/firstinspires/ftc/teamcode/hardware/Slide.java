@@ -13,11 +13,11 @@ public class Slide {
     }
 
     public void extendSlide () {
-        slide.runToPosition((int) Math.round(2000), 1.0);
+        slide.runToPosition((int) 2000, 0.6);
     }
 
     public void retractSlide () {
-        slide.runToPosition((int) Math.round(-1900), 1.0);
+        slide.runToPosition((int) 0, 0.6);
     }
 
 }
