@@ -4,13 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
+
 @TeleOp
 public class ClawStuff extends LinearOpMode {
-    Servo claw;
+    TwoPointServo claw;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        claw = hardwareMap.get(Servo.class, "claw");
+        claw = new TwoPointServo(0.25, 0.0, hardwareMap);
 
         waitForStart();
 //
@@ -22,9 +24,9 @@ public class ClawStuff extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.a) {
-                claw.setPosition(0.25);
+                claw.positionA();
             } else if (gamepad1.b) {
-                claw.setPosition(0);
+                claw.positionB();
             }
         }
     }
