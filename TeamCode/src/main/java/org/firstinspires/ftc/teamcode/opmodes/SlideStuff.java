@@ -34,10 +34,15 @@ public class SlideStuff extends LinearOpMode {
             // turn the motor the other way when dpad down is pressed to retract the slide,
             // and stop the slide when no button is pressed
             if (gamepad1.dpad_right) {
-                slides.extendSlide();
+                slides.slide.setPower(1.0);
             } else if (gamepad1.dpad_left) {
-                slides.retractSlide();
+                slides.slide.setPower(-1.0);
             }
+            else{
+                slides.slide.setPower(0);
+            }
+            telemetry.addData("current position", slides.slide.getPosition());
+            telemetry.update();
         }
     }
 }
