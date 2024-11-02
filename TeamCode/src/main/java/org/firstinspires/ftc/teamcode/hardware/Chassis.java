@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class ChassisMotor {
+public class Chassis {
     public Motor frontLeft;
     public Motor frontRight;
     public Motor backLeft;
     public Motor backRight;
 
 
-    public ChassisMotor(HardwareMap hwMap){
+    public Chassis(HardwareMap hwMap){
         DcMotorEx frontL = hwMap.get(DcMotorEx.class, "frontLeft");
         DcMotorEx frontR = hwMap.get(DcMotorEx.class, "frontRight");
         DcMotorEx backL = hwMap.get(DcMotorEx.class, "backLeft");

@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.ChassisMotor;
+import org.firstinspires.ftc.teamcode.hardware.Chassis;
 
 @TeleOp
 public class TeleOpMove extends OpMode {
-    public ChassisMotor bobot;
+    public Chassis bobot;
 
     @Override
     public void init() {
-        bobot = new ChassisMotor(hardwareMap);
+        bobot = new Chassis(hardwareMap);
     }
 
     @Override
