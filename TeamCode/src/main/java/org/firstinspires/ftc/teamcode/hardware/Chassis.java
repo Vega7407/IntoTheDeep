@@ -23,23 +23,23 @@ public class Chassis {
 
     public void setMotorPowers(double power){
 
-        frontLeft.invoke().setPower(power);
-        frontRight.invoke().setPower(power);
-        backLeft.invoke().setPower(power);
-        backRight.invoke().setPower(power);
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
     }
 
     public void setMotorPowers(double FlPower, double FrPower, double BlPower, double BrPower){
-        frontLeft.invoke().setPower(FlPower);
-        frontRight.invoke().setPower(FrPower);
-        backLeft.invoke().setPower(BlPower);
-        backRight.invoke().setPower(BrPower);
+        frontLeft.setPower(FlPower);
+        frontRight.setPower(FrPower);
+        backLeft.setPower(BlPower);
+        backRight.setPower(BrPower);
     }
 
     public void setMotorPowers(double y, double x, double rx){
-        frontLeft.invoke().setPower(y + x + rx);
-        frontRight.invoke().setPower(y - x + rx);
-        backLeft.invoke().setPower(y - x - rx);
-        backRight.invoke().setPower(y + x - rx);
+        frontLeft.setPower(y + x + rx);
+        frontRight.setPower(y - x + rx);
+        backLeft.setPower(y - x - rx);
+        backRight.setPower(y + x - rx);
     }
 }
