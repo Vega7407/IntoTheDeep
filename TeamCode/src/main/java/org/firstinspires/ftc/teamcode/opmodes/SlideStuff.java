@@ -15,6 +15,7 @@ public class SlideStuff extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         slides = new Slide(hardwareMap);
         slideMotor = hardwareMap.get(DcMotorEx.class, "slideMotor");
+        slides.slide.reset();
 
         waitForStart();
 
