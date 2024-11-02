@@ -49,6 +49,8 @@ class Motor(val dcMotorEx: DcMotorEx) {
     }
 
     companion object {
+        final val TICKS_PER_REV = 537.7
+
         fun reversed(motor: Motor) : Motor {
             motor.reverse()
             return motor

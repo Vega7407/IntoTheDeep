@@ -22,7 +22,7 @@ public class EncoderTest extends LinearOpMode {
         frontLeft.setPower(0.0);
         telemetry.addData("current position", frontLeft.getCurrentPosition());
         telemetry.update();
-        frontfront.runToPosition(12345678, 1.0);
+        frontfront.runToPosition(2*538, 1.0);
 
     }
 }

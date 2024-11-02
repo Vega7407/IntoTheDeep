@@ -6,15 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.hardware.Motor;
+import org.firstinspires.ftc.teamcode.hardware.Slide;
 
 @TeleOp
 public class SlideStuff extends LinearOpMode {
-    Motor slides;
+    Slide slides = new Slide(hardwareMap);
     DcMotorEx slideMotor;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        slides = new Motor(hardwareMap.get(DcMotorEx.class, "slides"));
         slideMotor = hardwareMap.get(DcMotorEx.class, "slideMotor");
 
         // these three if statements rotate the slide up when dpad up is pressed,
@@ -32,11 +32,9 @@ public class SlideStuff extends LinearOpMode {
         // turn the motor the other way when dpad down is pressed to retract the slide,
         // and stop the slide when no button is pressed
         if (gamepad1.dpad_right) {
-            slides.invoke().setPower(1);
+            slides.extendSlide();
         } else if (gamepad1.dpad_left) {
-            slides.invoke().setPower(-1);
-        } else {
-            slides.invoke().setPower(0);
+            slides.retractSlide();
         }
     }
 }
