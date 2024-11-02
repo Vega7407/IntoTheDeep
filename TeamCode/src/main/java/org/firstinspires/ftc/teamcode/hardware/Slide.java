@@ -17,7 +17,7 @@ public class Slide {
     }
 
     public void retractSlide () {
-        slide.runToPosition((int) Math.round(-2000), 1.0);
+        slide.runToPosition((int) Math.round(-1900), 1.0);
     }
 
 }
