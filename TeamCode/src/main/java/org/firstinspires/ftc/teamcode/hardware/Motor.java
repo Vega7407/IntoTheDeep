@@ -13,6 +13,7 @@ public class Motor {
 
     public Motor(DcMotorEx dcMotorEx) {
         this.internal = dcMotorEx;
+        reset();
     }
 
     public Motor(HardwareMap hwMap, String name) {
@@ -69,7 +70,7 @@ public class Motor {
 
         }
 
-        internal.setPower(0);
-        reset();
+        //internal.setPower(0);
+        //reset();
     }
 }
