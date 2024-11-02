@@ -8,7 +8,7 @@ public class Slide {
     public Motor slide;
 
     public Slide (HardwareMap hwMap) {
-        DcMotorEx slideMotor = hwMap.get(DcMotorEx.class, "slideMotor");
+        DcMotorEx slideMotor = hwMap.get(DcMotorEx.class, "slides");
         slide = new Motor(slideMotor);
     }
 
