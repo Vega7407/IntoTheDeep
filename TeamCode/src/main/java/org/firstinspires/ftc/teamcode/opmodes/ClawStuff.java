@@ -9,10 +9,12 @@ import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
 @TeleOp
 public class ClawStuff extends LinearOpMode {
     TwoPointServo claw;
+    TwoPointServo clawWrist;
 
     @Override
     public void runOpMode() throws InterruptedException {
         claw = new TwoPointServo(0.25, 0.0, hardwareMap);
+        clawWrist = new TwoPointServo(0.25, 0.0, hardwareMap);
 
         waitForStart();
 //
@@ -27,6 +29,10 @@ public class ClawStuff extends LinearOpMode {
                 claw.positionA();
             } else if (gamepad1.b) {
                 claw.positionB();
+            } else if (gamepad1.x) {
+                clawWrist.positionA();
+            } else if (gamepad1.y) {
+                clawWrist.positionB();
             }
         }
     }
