@@ -5,48 +5,46 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.hardware.Chassis;
+import org.firstinspires.ftc.teamcode.hardware.Slide;
+import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
+import org.firstinspires.ftc.teamcode.hardware.Motor;
 
 @TeleOp
 public class AllStuff extends LinearOpMode {
 
-    Servo claw;
-    Servo clawWrist;
-    DcMotorEx slides;
-    DcMotorEx slideMotor;
-    DcMotor frontLeft;
-    DcMotor frontRight;
-    DcMotor backLeft;
-    DcMotor backRight;
+    TwoPointServo claw;
+    TwoPointServo clawWrist;
+    Slide slides;
+    Motor slideMotor;
+    Chassis bobot;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        claw = hardwareMap.get(Servo.class, "claw");
-        clawWrist = hardwareMap.get(Servo.class, "clawWrist");
-        slides = hardwareMap.get(DcMotorEx.class, "slides");
-        slideMotor = hardwareMap.get(DcMotorEx.class, "slideMotor");
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        claw = new TwoPointServo(0.25, 0.0, hardwareMap);
+        clawWrist = new TwoPointServo(0.25, 0.0, hardwareMap);
+        slides = new Slide(hardwareMap);
+        slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
+        bobot = new Chassis(hardwareMap);
 
         waitForStart();
 
         while (opModeIsActive()) {
             // these two if statements open the servo when A is pressed and close the servo when B is pressed
             if (gamepad1.a) {
-                claw.setPosition(0.3);
+                claw.positionA();
             } else if (gamepad1.b) {
-                claw.setPosition(0);
+                claw.positionB();
             }
 
             // these two if statements rotate the servo up when Y is pressed and rotate the servo down when X is pressed
             if (gamepad1.y){
-                clawWrist.setPosition(0.25);
+                clawWrist.positionA();
             } else if (gamepad1.x) {
-                clawWrist.setPosition(0);
+                clawWrist.positionB();
             }
 
             // these three if statements rotate the slide up when dpad up is pressed,
@@ -64,23 +62,17 @@ public class AllStuff extends LinearOpMode {
             // turn the motor the other way when dpad down is pressed to retract the slide,
             // and stop the slide when no button is pressed
             if (gamepad1.dpad_right){
-                slides.setPower(.75);
+                slides.extendSlide();
             }
             else if (gamepad1.dpad_left){
-                slides.setPower(-.65);
-            }
-            else {
-                slides.setPower(0);
+                slides.retractSlide();
             }
 
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            frontLeft.setPower(y + x + rx);
-            backLeft.setPower(y - x + rx);
-            frontRight.setPower(y - x - rx);
-            backRight.setPower(y + x - rx);
+            bobot.setMotorPowers(y, x, rx);
         }
     }
 }
