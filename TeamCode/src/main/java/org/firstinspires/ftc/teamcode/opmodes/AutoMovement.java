@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.hardware.Motor.COUNTS_PER_INCH;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,14 +15,6 @@ public class AutoMovement extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Chassis bobot = new Chassis(hardwareMap);
         waitForStart();
-        bobot.frontLeft.runToPosition(12345678, 1);
-        bobot.frontRight.runToPosition(12345678, 1);
-        bobot.backLeft.runToPosition(12345678, 1);
-        bobot.backRight.runToPosition(12345678, 1);
-        sleep(3500);
-        bobot.frontLeft.runToPosition(12345678, -1);
-        bobot.frontRight.runToPosition(12345678, -1);
-        bobot.backLeft.runToPosition(12345678, -1);
-        bobot.backRight.runToPosition(12345678, -1);
+        bobot.setPosition((int)(COUNTS_PER_INCH * 20), 1); //11.87in circumference, 573.3 = 1 rotation
     }
 }

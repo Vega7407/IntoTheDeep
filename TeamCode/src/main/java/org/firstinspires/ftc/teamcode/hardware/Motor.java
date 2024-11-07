@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class Motor {
     DcMotorEx internal;
     public static final double COUNTS_PER_REV = 537.7;
+    public static final double COUNTS_PER_INCH = 45.3;
 
     public Motor(DcMotorEx dcMotorEx) {
         this.internal = dcMotorEx;

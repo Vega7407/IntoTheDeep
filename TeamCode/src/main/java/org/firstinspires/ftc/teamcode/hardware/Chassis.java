@@ -42,4 +42,10 @@ public class Chassis {
         backLeft.setPower(y - x - rx);
         backRight.setPower(y + x - rx);
     }
+    public void setPosition(int distance, double power){
+        frontLeft.runToPosition(distance, power);
+        frontRight.runToPosition(distance, power);
+        backLeft.runToPosition(distance, power);
+        backRight.runToPosition(distance, power);
+    }
 }
