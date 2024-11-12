@@ -13,8 +13,8 @@ public class ClawStuff extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        claw = new TwoPointServo(0.25, 0.0, hardwareMap);
-        clawWrist = new TwoPointServo(0.25, 0.0, hardwareMap);
+        claw = new TwoPointServo(0.25, 0.0, "claw", hardwareMap);
+        clawWrist = new TwoPointServo(0.25, 0.0, "clawWrist", hardwareMap);
 
         waitForStart();
 //

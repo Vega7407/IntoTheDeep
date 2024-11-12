@@ -15,10 +15,10 @@ public class Chassis {
         DcMotorEx frontR = hwMap.get(DcMotorEx.class, "frontRight");
         DcMotorEx backL = hwMap.get(DcMotorEx.class, "backLeft");
         DcMotorEx backR = hwMap.get(DcMotorEx.class, "backRight");
-        Motor frontLeft = new Motor(frontL);
-        Motor frontRight = new Motor(frontR);
-        Motor backLeft = new Motor(backL);
-        Motor backRight = new Motor(backR);
+        frontLeft = new Motor(frontL);
+        frontRight = new Motor(frontR);
+        backLeft = new Motor(backL);
+        backRight = new Motor(backR);
     }
 
     public void setMotorPowers(double power){
