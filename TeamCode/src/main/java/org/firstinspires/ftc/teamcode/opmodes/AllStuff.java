@@ -25,7 +25,7 @@ public class AllStuff extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         claw = new TwoPointServo(0.25, 0.0, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.25, 0.0, "clawWrist", hardwareMap);
+        clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         bobot = new Chassis(hardwareMap);
@@ -67,6 +67,10 @@ public class AllStuff extends LinearOpMode {
             }
             else if (gamepad1.dpad_left){
                 slides.retractSlide();
+            }
+
+            if (gamepad1.left_bumper){
+                slides.setSlide();
             }
 
             double y = -gamepad1.left_stick_y;
