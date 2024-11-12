@@ -9,8 +9,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class Motor {
     DcMotorEx internal;
-    public static final double COUNTS_PER_REV = 537.7;
-    public static final double COUNTS_PER_INCH = 45.3;
+    public static final double CPR_312 = 537.7;
+    public static final double CPI_312_96 = CPR_312 / (2 * Math.PI * 96);
+
+    public static final double CPR_84 = 1993.6;
+
 
     public Motor(DcMotorEx dcMotorEx) {
         this.internal = dcMotorEx;

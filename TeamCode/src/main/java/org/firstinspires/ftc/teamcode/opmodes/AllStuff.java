@@ -33,6 +33,7 @@ public class AllStuff extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+
             // these two if statements open the servo when A is pressed and close the servo when B is pressed
             if (gamepad1.a) {
                 claw.positionA();
