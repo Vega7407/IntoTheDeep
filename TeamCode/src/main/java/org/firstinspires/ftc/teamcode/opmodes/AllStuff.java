@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.hardware.Motor.CPR_84;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,6 +25,10 @@ public class AllStuff extends LinearOpMode {
     Motor slideMotor;
     Chassis bobot;
     Gamepad lastGamepad1;
+    double target;
+    double position;
+    double error;
+    double power;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -56,10 +62,14 @@ public class AllStuff extends LinearOpMode {
             // rotate the slide down when dpad down is pressed,
             // and stop the slide when no button is pressed
             if (gamepad1.dpad_up && !lastGamepad1.dpad_up) {
-                slideMotor.runToPosition((int) (Motor.CPR_84 * 0.4), 0.6);
+                target = CPR_84/2;
             } else if (gamepad1.dpad_down && !lastGamepad1.dpad_down) {
-                slideMotor.runToPosition(0, 0.3);
+                target = 0;
             }
+            position = slideMotor.getPosition();
+            error = target - position;
+            power = (double) error / target;
+            slideMotor.getInternal().setPower(power);
 
             // these three if statements turn the motor when dpad up is pressed to extend the slide,
             // turn the motor the other way when dpad down is pressed to retract the slide,
