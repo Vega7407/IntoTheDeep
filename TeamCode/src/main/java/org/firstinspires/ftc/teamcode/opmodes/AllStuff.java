@@ -58,13 +58,12 @@ public class AllStuff extends LinearOpMode {
                 clawWrist.positionB();
             }
 
-            // these three if statements rotate the slide up when dpad up is pressed,
+            // these two if statements rotate the slide up when dpad up is pressed and
             // rotate the slide down when dpad down is pressed,
-            // and stop the slide when no button is pressed
-            if (gamepad1.dpad_up && !lastGamepad1.dpad_up) {
-                target = CPR_84/2;
-            } else if (gamepad1.dpad_down && !lastGamepad1.dpad_down) {
-                target = 0;
+            if (gamepad1.dpad_up) {
+                target = -CPR_84/2.2;
+            } else if (gamepad1.dpad_down) {
+                target = -800;
             }
             position = slideMotor.getPosition();
             error = target - position;
@@ -85,13 +84,17 @@ public class AllStuff extends LinearOpMode {
                 slides.setSlide();
             }
 
-            double y = -gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x;
+            double y = gamepad1.left_stick_x;
+            double x = -gamepad1.left_stick_y;
             double rx = gamepad1.right_stick_x;
 
             bobot.setMotorPowers(y, x, rx);
 
-            lastGamepad1.copy(gamepad1);
+            telemetry.addData("Target", target);
+            telemetry.addData("Prop", error/target);
+            telemetry.addData("Error", error);
+            telemetry.addData("Pos", position);
+            telemetry.update();
         }
     }
 }
