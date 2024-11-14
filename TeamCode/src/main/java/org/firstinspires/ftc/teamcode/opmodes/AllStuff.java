@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -21,6 +22,7 @@ public class AllStuff extends LinearOpMode {
     Slide slides;
     Motor slideMotor;
     Chassis bobot;
+    Gamepad lastGamepad1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,12 +30,14 @@ public class AllStuff extends LinearOpMode {
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
+        slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
+        lastGamepad1 = new Gamepad();
+
 
         waitForStart();
 
         while (opModeIsActive()) {
-
             // these two if statements open the servo when A is pressed and close the servo when B is pressed
             if (gamepad1.a) {
                 claw.positionA();
@@ -51,12 +55,10 @@ public class AllStuff extends LinearOpMode {
             // these three if statements rotate the slide up when dpad up is pressed,
             // rotate the slide down when dpad down is pressed,
             // and stop the slide when no button is pressed
-            if (gamepad1.dpad_up) {
-                slideMotor.setPower(1);
-            } else if (gamepad1.dpad_down) {
-                slideMotor.setPower(-.75);
-            } else {
-                slideMotor.setPower(0);
+            if (gamepad1.dpad_up && !lastGamepad1.dpad_up) {
+                slideMotor.runToPosition((int) (Motor.CPR_84 * 0.4), 0.6);
+            } else if (gamepad1.dpad_down && !lastGamepad1.dpad_down) {
+                slideMotor.runToPosition(0, 0.3);
             }
 
             // these three if statements turn the motor when dpad up is pressed to extend the slide,
@@ -78,6 +80,8 @@ public class AllStuff extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
 
             bobot.setMotorPowers(y, x, rx);
+
+            lastGamepad1.copy(gamepad1);
         }
     }
 }
