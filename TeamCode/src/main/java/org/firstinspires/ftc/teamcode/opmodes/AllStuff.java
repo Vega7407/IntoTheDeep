@@ -29,6 +29,7 @@ public class AllStuff extends LinearOpMode {
     double position;
     double error;
     double power;
+    double kP;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,6 +40,7 @@ public class AllStuff extends LinearOpMode {
         slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
         lastGamepad1 = new Gamepad();
+        slideMotor.reverse();
 
 
         waitForStart();
@@ -61,13 +63,14 @@ public class AllStuff extends LinearOpMode {
             // these two if statements rotate the slide up when dpad up is pressed and
             // rotate the slide down when dpad down is pressed,
             if (gamepad1.dpad_up) {
-                target = -CPR_84/2.2;
+                target = CPR_84/2.2;
             } else if (gamepad1.dpad_down) {
-                target = -800;
+                target = 0;
             }
             position = slideMotor.getPosition();
             error = target - position;
-            power = (double) error / target;
+            kP = 1.0;
+            power = error * kP;
             slideMotor.getInternal().setPower(power);
 
             // these three if statements turn the motor when dpad up is pressed to extend the slide,
