@@ -41,7 +41,7 @@ public class AllStuff extends LinearOpMode {
         bobot = new Chassis(hardwareMap);
         lastGamepad1 = new Gamepad();
         slideMotor.reverse();
-
+        slideMotor.reset();
 
         waitForStart();
 
