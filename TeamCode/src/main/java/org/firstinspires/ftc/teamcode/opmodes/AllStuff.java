@@ -40,7 +40,6 @@ public class AllStuff extends LinearOpMode {
         slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
         lastGamepad1 = new Gamepad();
-        slideMotor.reverse();
         slideMotor.reset();
 
         waitForStart();
@@ -65,10 +64,10 @@ public class AllStuff extends LinearOpMode {
             if (gamepad1.dpad_up) {
                 target = CPR_84/3;
             } else if (gamepad1.dpad_down) {
-                target = 0;
+                target = 1;
             }
             position = slideMotor.getPosition();
-            error = target - position;
+            error = target + position;`
             kP = 1.0;
             power = error * kP;
             slideMotor.getInternal().setPower(power);
@@ -97,6 +96,7 @@ public class AllStuff extends LinearOpMode {
             telemetry.addData("Prop", error/target);
             telemetry.addData("Error", error);
             telemetry.addData("Pos", position);
+            telemetry.addData("Pow", power);
             telemetry.update();
         }
     }
