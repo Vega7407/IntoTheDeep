@@ -63,7 +63,7 @@ public class AllStuff extends LinearOpMode {
             // these two if statements rotate the slide up when dpad up is pressed and
             // rotate the slide down when dpad down is pressed,
             if (gamepad1.dpad_up) {
-                target = CPR_84/2.2;
+                target = CPR_84/3;
             } else if (gamepad1.dpad_down) {
                 target = 0;
             }
