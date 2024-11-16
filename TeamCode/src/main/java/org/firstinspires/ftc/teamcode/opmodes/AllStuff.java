@@ -65,7 +65,7 @@ public class AllStuff extends LinearOpMode {
             }
 
             if (gamepad1.dpad_up) {
-                slideMotor.setPower(.7);
+                slideMotor.setPower(.9);
             } else if (gamepad2.dpad_down) {
                 slideMotor.setPower(-.6);
             } else if (gamepad1.right_bumper) {
@@ -118,7 +118,8 @@ public class AllStuff extends LinearOpMode {
 //            telemetry.addData("Error", error);
 //            telemetry.addData("Pos", position);
 //            telemetry.addData("Pow", power);
-            telemetry.addData("Servo", claw.claw.getPosition());
+            telemetry.addData("claw", claw.claw.getPosition());
+            telemetry.addData("wrist", clawWrist.claw.getPosition());
             telemetry.update();
         }
     }
