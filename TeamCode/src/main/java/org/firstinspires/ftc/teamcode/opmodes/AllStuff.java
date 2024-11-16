@@ -35,7 +35,7 @@ public class AllStuff extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        claw = new TwoPointServo(0.25, 0.0, "claw", hardwareMap);
+        claw = new TwoPointServo(1.0, 0.5, "claw", hardwareMap);
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
@@ -109,6 +109,7 @@ public class AllStuff extends LinearOpMode {
             telemetry.addData("Error", error);
             telemetry.addData("Pos", position);
             telemetry.addData("Pow", power);
+            telemetry.addData("Servo", claw.claw.getPosition());
             telemetry.update();
         }
     }
