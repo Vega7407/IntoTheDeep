@@ -25,17 +25,17 @@ public class AllStuff extends LinearOpMode {
     Motor slideMotor;
     Chassis bobot;
 //    Gamepad lastGamepad1;
-    double target;
-    double position;
-    double error;
-    double power;
+//    double target;
+//    double position;
+//    double error;
+//    double power;
 //    double kP = 1;
 //    final int tolerance = 700;
 //    boolean doPID = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        claw = new TwoPointServo(1.0, 0.5, "claw", hardwareMap);
+        claw = new TwoPointServo(0.0, 0.3, "claw", hardwareMap);
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
