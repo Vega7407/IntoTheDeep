@@ -13,6 +13,9 @@ public class TwoPointServo {
         pointA = pA;
         pointB = pB;
         claw = hwMap.get(Servo.class, aName);
+        claw.setDirection(Servo.Direction.REVERSE);
+
+
     }
 
     public void positionA () {
