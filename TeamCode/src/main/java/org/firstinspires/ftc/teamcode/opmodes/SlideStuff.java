@@ -24,9 +24,9 @@ public class SlideStuff extends LinearOpMode {
             // rotate the slide down when dpad down is pressed,
             // and stop the slide when no button is pressed
             if (gamepad1.dpad_up) {
-                slideMotor.setPower(0.75);
+                slideMotor.setPower(0.9);
             } else if (gamepad1.dpad_down) {
-                slideMotor.setPower(-.75);
+                slideMotor.setPower(-.9);
             } else {
                 slideMotor.setPower(0);
             }
