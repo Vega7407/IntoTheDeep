@@ -24,14 +24,14 @@ public class AllStuff extends LinearOpMode {
     Slide slides;
     Motor slideMotor;
     Chassis bobot;
-    Gamepad lastGamepad1;
+//    Gamepad lastGamepad1;
     double target;
     double position;
     double error;
     double power;
-    double kP = 1;
-    final int tolerance = 700;
-    boolean doPID = true;
+//    double kP = 1;
+//    final int tolerance = 700;
+//    boolean doPID = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,10 +39,10 @@ public class AllStuff extends LinearOpMode {
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
-        slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
-        lastGamepad1 = new Gamepad();
-        slideMotor.reset();
+//        lastGamepad1 = new Gamepad();
+//        slideMotor.reset();
 
 
         waitForStart();
@@ -62,27 +62,34 @@ public class AllStuff extends LinearOpMode {
                 clawWrist.positionB();
             }
 
-            // these two if statements rotate the slide up when dpad up is pressed and
-            // rotate the slide down when dpad down is pressed,
             if (gamepad1.dpad_up) {
-                target = CPR_84/2.45;
-                kP = 1;
-            } else if (gamepad1.dpad_down) {
-                target = 1;
-                kP = 0.05 ;
+                slideMotor.setPower(.7);
+            } else if (gamepad2.dpad_down) {
+                slideMotor.setPower(-.6);
             } else if (gamepad1.right_bumper) {
-                doPID = !doPID;
-            }
-            position = -slideMotor.getPosition();
-            error = target - position;
-
-            power = error * kP;
-
-            if (doPID && Math.abs(error) > tolerance) {
-                slideMotor.getInternal().setPower(power);
+                slideMotor.setPower(.1);
             } else {
-                power = 0;
+                slideMotor.setPower(0);
             }
+//            if (gamepad1.dpad_up) {
+//                target = CPR_84/2.45;
+//                kP = 1;
+//            } else if (gamepad1.dpad_down) {
+//                target = 1;
+//                kP = 0.05 ;
+//            } else if (gamepad1.right_bumper) {
+//                doPID = !doPID;
+//            }
+//            position = -slideMotor.getPosition();
+//            error = target - position;
+//
+//            power = error * kP;
+//
+//            if (doPID && Math.abs(error) > tolerance) {
+//                slideMotor.getInternal().setPower(power);
+//            } else {
+//                power = 0;
+//            }
 
             // these three if z statements turn the motor when dpad up is pressed to extend the slide,
             // turn the motor the other way when dpad down is pressed to retract the slide,
