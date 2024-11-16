@@ -111,11 +111,11 @@ public class AllStuff extends LinearOpMode {
 
             bobot.setMotorPowers(y, x, rx);
 
-            telemetry.addData("Target", target);
-            telemetry.addData("Prop", error/target);
-            telemetry.addData("Error", error);
-            telemetry.addData("Pos", position);
-            telemetry.addData("Pow", power);
+//            telemetry.addData("Target", target);
+//            telemetry.addData("Prop", error/target);
+//            telemetry.addData("Error", error);
+//            telemetry.addData("Pos", position);
+//            telemetry.addData("Pow", power);
             telemetry.addData("Servo", claw.claw.getPosition());
             telemetry.update();
         }
