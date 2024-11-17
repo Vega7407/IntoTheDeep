@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import static org.firstinspires.ftc.teamcode.hardware.Motor.CPR_84;
+import static org.firstinspires.ftc.teamcode.opmodes.PIDConstants.Kp;
+import static org.firstinspires.ftc.teamcode.opmodes.PIDConstants.Ki;
+import static org.firstinspires.ftc.teamcode.opmodes.PIDConstants.Kd;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Chassis;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
@@ -25,9 +29,17 @@ public class AllStuffPID extends LinearOpMode {
     double position;
     double error;
     double power;
-    double kP = 2;
     final int tolerance = 700;
     boolean doPID = true;
+    double reference;
+
+    double integralSum;
+
+    double lastError;
+
+    boolean setPointIsNotReached;
+    double out;
+    double derivative;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,10 +52,18 @@ public class AllStuffPID extends LinearOpMode {
         lastGamepad1 = new Gamepad();
         slideMotor.reset();
 
+        reference = 0; // some value
+
+        integralSum = 0;
+
+        lastError = 0;
+
 
 
 
         waitForStart();
+
+        ElapsedTime timer = new ElapsedTime();
 
         while (opModeIsActive()) {
             // these two if statements open the servo when A is pressed and close the servo when B is pressed
@@ -60,20 +80,41 @@ public class AllStuffPID extends LinearOpMode {
                 clawWrist.positionB();
             }
 
+            while (setPointIsNotReached) {
+                // obtain encoder position
+                position = slideMotor.getPosition();
 
+                // calculate the error
+                error = reference - position;
+
+                // rate of change of the error
+                derivative = (error - lastError) / timer.seconds();
+
+                // sum of all error over time
+                integralSum = integralSum + (error * timer.seconds());
+
+                out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+
+                slideMotor.setPower(out);
+
+                lastError = error;
+
+                // reset the timer for next time
+                timer.reset();
+            }
             if (gamepad1.dpad_up) {
                 target = CPR_84/2.45;
-                kP = 1;
+                target *= Kp;
             } else if (gamepad1.dpad_down) {
                 target = 1;
-                kP = 0.05 ;
+                Kp = 0.05 ;
             } else if (gamepad1.right_bumper) {
                 doPID = !doPID;
             }
             position = -slideMotor.getPosition();
             error = target - position;
 
-            power = error * kP;
+            power = error * Kp;
 
             if (doPID && Math.abs(error) > tolerance) {
                 slideMotor.getInternal().setPower(power);
