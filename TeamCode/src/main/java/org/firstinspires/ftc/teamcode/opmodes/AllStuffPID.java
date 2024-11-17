@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.hardware.Motor.CPR_84;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -32,10 +35,10 @@ public class AllStuffPID extends LinearOpMode {
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
-//        slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
-//        lastGamepad1 = new Gamepad();
-//        slideMotor.reset();
+        lastGamepad1 = new Gamepad();
+        slideMotor.reset();
 
 
 
@@ -68,25 +71,25 @@ public class AllStuffPID extends LinearOpMode {
             } else {
                 slideMotor.setPower(0);
             }
-//            if (gamepad1.dpad_up) {
-//                target = CPR_84/2.45;
-//                kP = 1;
-//            } else if (gamepad1.dpad_down) {
-//                target = 1;
-//                kP = 0.05 ;
-//            } else if (gamepad1.right_bumper) {
-//                doPID = !doPID;
-//            }
-//            position = -slideMotor.getPosition();
-//            error = target - position;
-//
-//            power = error * kP;
-//
-//            if (doPID && Math.abs(error) > tolerance) {
-//                slideMotor.getInternal().setPower(power);
-//            } else {
-//                power = 0;
-//            }
+            if (gamepad1.dpad_up) {
+                target = CPR_84/2.45;
+                kP = 1;
+            } else if (gamepad1.dpad_down) {
+                target = 1;
+                kP = 0.05 ;
+            } else if (gamepad1.right_bumper) {
+                doPID = !doPID;
+            }
+            position = -slideMotor.getPosition();
+            error = target - position;
+
+            power = error * kP;
+
+            if (doPID && Math.abs(error) > tolerance) {
+                slideMotor.getInternal().setPower(power);
+            } else {
+                power = 0;
+            }
 
             // these three if z statements turn the motor when dpad up is pressed to extend the slide,
             // turn the motor the other way when dpad down is pressed to retract the slide,
@@ -108,11 +111,11 @@ public class AllStuffPID extends LinearOpMode {
 
             bobot.setMotorPowers(y, x, rx);
 
-//            telemetry.addData("Target", target);
-//            telemetry.addData("Prop", error/target);
-//            telemetry.addData("Error", error);
-//            telemetry.addData("Pos", position);
-//            telemetry.addData("Pow", power);
+            telemetry.addData("Target", target);
+            telemetry.addData("Prop", error/target);
+            telemetry.addData("Error", error);
+            telemetry.addData("Pos", position);
+            telemetry.addData("Pow", power);
             telemetry.addData("claw", claw.claw.getPosition());
             telemetry.addData("wrist", clawWrist.claw.getPosition());
             telemetry.update();
