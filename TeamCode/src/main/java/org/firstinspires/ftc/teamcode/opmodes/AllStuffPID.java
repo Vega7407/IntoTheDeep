@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.hardware.Chassis;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
@@ -16,14 +17,14 @@ public class AllStuffPID extends LinearOpMode {
     Slide slides;
     Motor slideMotor;
     Chassis bobot;
-//    Gamepad lastGamepad1;
-//    double target;
-//    double position;
-//    double error;
-//    double power;
-//    double kP = 1;
-//    final int tolerance = 700;
-//    boolean doPID = true;
+    Gamepad lastGamepad1;
+    double target;
+    double position;
+    double error;
+    double power;
+    double kP = 1;
+    final int tolerance = 700;
+    boolean doPID = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
