@@ -17,10 +17,10 @@ public class Slide {
     }
 
     public void retractSlide () {
-        slide.runToPosition((int) 100, 0.69);
+        slide.runToPosition((int) 10, 0.69);
     }
 
     public void setSlide () {
-        slide.runToPosition((int) 200, 0.69);
+        slide.runToPosition((int) 175, 0.69);
     }
 }

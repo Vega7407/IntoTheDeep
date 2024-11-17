@@ -1,24 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.hardware.Motor.CPR_84;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.hardware.Chassis;
+import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.hardware.Slide;
 import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
-import org.firstinspires.ftc.teamcode.hardware.Motor;
 
 @TeleOp
-public class AllStuff extends LinearOpMode {
-
+public class AllStuffPID extends LinearOpMode {
     TwoPointServo claw;
     TwoPointServo clawWrist;
     Slide slides;
