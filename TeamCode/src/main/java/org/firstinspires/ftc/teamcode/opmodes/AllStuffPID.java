@@ -25,7 +25,7 @@ public class AllStuffPID extends LinearOpMode {
     double position;
     double error;
     double power;
-    double kP = 1;
+    double kP = 2;
     final int tolerance = 700;
     boolean doPID = true;
 
@@ -60,17 +60,7 @@ public class AllStuffPID extends LinearOpMode {
                 clawWrist.positionB();
             }
 
-            if (gamepad1.dpad_up) {
-                slideMotor.setPower(.9);
-            } else if (gamepad1.dpad_down) {
-                slideMotor.setPower(-.6);
-            } else if (gamepad1.left_bumper) {
-                slideMotor.setPower(.1);
-            } else if (gamepad1.right_bumper) {
-                slideMotor.setPower(-.1);
-            } else {
-                slideMotor.setPower(0);
-            }
+
             if (gamepad1.dpad_up) {
                 target = CPR_84/2.45;
                 kP = 1;
