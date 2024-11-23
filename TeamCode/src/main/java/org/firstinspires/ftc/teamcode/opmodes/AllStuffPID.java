@@ -40,7 +40,7 @@ public class AllStuffPID extends LinearOpMode {
     boolean setPointIsNotReached;
     double out;
     double derivative;
-
+    double Kcos;
     @Override
     public void runOpMode() throws InterruptedException {
         claw = new TwoPointServo(0.45, 0.7, "claw", hardwareMap);
@@ -57,6 +57,7 @@ public class AllStuffPID extends LinearOpMode {
         integralSum = 0;
 
         lastError = 0;
+        setPointIsNotReached = true;
 
 
 
@@ -93,7 +94,7 @@ public class AllStuffPID extends LinearOpMode {
                 // sum of all error over time
                 integralSum = integralSum + (error * timer.seconds());
 
-                out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+                out = (Math.cos(reference) * Kcos) + integralSum + derivative;
 
                 slideMotor.setPower(out);
 
@@ -103,8 +104,7 @@ public class AllStuffPID extends LinearOpMode {
                 timer.reset();
             }
             if (gamepad1.dpad_up) {
-                target = CPR_84/2.45;
-                target *= Kp;
+                reference = 45;
             } else if (gamepad1.dpad_down) {
                 target = 1;
                 Kp = 0.05 ;
