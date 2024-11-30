@@ -103,20 +103,9 @@ public class AllStuffPID extends LinearOpMode {
             if (gamepad1.dpad_up) {
                 reference = 45;
             } else if (gamepad1.dpad_down) {
-                target = 1;
-                Kp = 0.05 ;
+                reference = 0;
             } else if (gamepad1.right_bumper) {
                 doPID = !doPID;
-            }
-            position = -slideMotor.getPosition();
-            error = target - position;
-
-            power = error * Kp;
-
-            if (doPID && Math.abs(error) > tolerance) {
-                slideMotor.getInternal().setPower(power);
-            } else {
-                power = 0;
             }
 
             // these three if z statements turn the motor when dpad up is pressed to extend the slide,
