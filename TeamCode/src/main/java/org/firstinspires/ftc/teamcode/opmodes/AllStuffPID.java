@@ -59,9 +59,6 @@ public class AllStuffPID extends LinearOpMode {
         lastError = 0;
         setPointIsNotReached = true;
 
-
-
-
         waitForStart();
 
         ElapsedTime timer = new ElapsedTime();
