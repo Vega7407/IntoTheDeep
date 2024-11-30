@@ -1,80 +1,87 @@
-package org.firstinspires.ftc.teamcode.hardware;
+package org.firstinspires.ftc.teamcode.hardware
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-
-public class Motor {
-    DcMotorEx internal;
-    public static final double CPR_312 = 537.7;
-    public static final double CPI_312_96 = CPR_312 / (2 * Math.PI * 96);
-
-    public static final double CPR_84 = 1993.6;
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
+import kotlin.math.PI
+import kotlin.math.round
 
 
-    public Motor(DcMotorEx dcMotorEx) {
-        this.internal = dcMotorEx;
-        reset();
+class Motor(private val internal: DcMotorEx) {
+
+
+    init {
+        val controller = internal.controller
+        internal.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        reset()
     }
 
-    public Motor(HardwareMap hwMap, String name) {
-        this(hwMap.get(DcMotorEx.class, name));
+    constructor(name: String, hwMap: HardwareMap) : this(hwMap[DcMotorEx::class.java, name])
+
+    operator fun invoke(): DcMotorEx {
+        return internal
     }
 
-    public DcMotorEx getInternal() {
-        return internal;
-    }
+    var zeroPowerBehavior: DcMotor.ZeroPowerBehavior by internal::zeroPowerBehavior
+    val current: Double = internal.getCurrent(CurrentUnit.AMPS)
+    val isBusy get() = internal.isBusy
+    val position: Int by internal::currentPosition
 
-    public double getCurrent() {
-        return internal.getCurrent(CurrentUnit.AMPS);
-    }
+    var power: Double by internal::power
+    var targetPosition: Int by internal::targetPosition
+    var direction: DcMotorSimple.Direction by internal::direction
+    var mode: DcMotor.RunMode by internal::mode
 
-    public double getPosition() {
-        return internal.getCurrentPosition();
-    }
+    fun runToPosition(target: Int, power: Double) {
+        this.targetPosition = target
+        this.mode = DcMotor.RunMode.RUN_TO_POSITION
+        this.power = power
 
-    public void setDirection(DcMotorSimple.Direction direction) {
-        internal.setDirection(direction);
-    }
-
-    public void setPower(double power) {
-        internal.setPower(power);
-    }
-
-    public void reverse() {
-        switch (internal.getDirection()) {
-            case FORWARD:
-                setDirection(DcMotorSimple.Direction.REVERSE);
-                break;
-            case REVERSE:
-                setDirection(DcMotorSimple.Direction.FORWARD);
-                break;
-        }
-    }
-
-    public static Motor reversed(Motor motor) {
-        motor.reverse();
-        return motor;
-    }
-
-    public void reset() {
-        internal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        internal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void runToPosition(int target, double power) {
-        internal.setTargetPosition(target);
-        internal.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        internal.setPower(power);
-
-        while (internal.isBusy()) {
-
+        while (this.isBusy) {
+            //weewoo
         }
 
-        //internal.setPower(0);
-        //reset();
+    }
+
+    fun reverse() = when (direction) {
+        DcMotorSimple.Direction.FORWARD -> internal.direction = DcMotorSimple.Direction.REVERSE
+        DcMotorSimple.Direction.REVERSE -> internal.direction = DcMotorSimple.Direction.FORWARD
+    }
+
+    fun reset() {
+        internal.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        internal.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+    }
+
+
+    companion object {
+        @JvmStatic val CPR_312 = 537.7
+        @JvmStatic val CPR_435 = 384.5
+        @JvmStatic val CPR_84 = 1993.6
+
+        @JvmStatic val CPI_312_96 = round((1 / (96 * PI)) * CPR_312 * 25.4).toInt()
+        @JvmStatic val CPI_312_104 = round((1 / (104 * PI)) * CPR_312 * 25.4).toInt()
+        @JvmStatic val CPI_435_104 = round((1 / (104 * PI)) * CPR_435 * 25.4).toInt()
+
+        @JvmStatic val TPD_84 = round(CPR_84/360)
+
+        fun reversed(motor: Motor): Motor {
+            motor.reverse()
+            return motor
+        }
+
+        fun reverse(motor: DcMotorEx) = when (motor.direction) {
+            DcMotorSimple.Direction.FORWARD -> motor.direction = DcMotorSimple.Direction.REVERSE
+            DcMotorSimple.Direction.REVERSE -> motor.direction = DcMotorSimple.Direction.FORWARD
+            null -> motor.direction = DcMotorSimple.Direction.FORWARD
+        }
+
+        fun reversed(motor: DcMotorEx) : DcMotorEx {
+            reverse(motor)
+            return motor
+        }
     }
 }
+

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.hardware.Motor.CPR_84;
 import static org.firstinspires.ftc.teamcode.opmodes.PIDConstants.Kp;
 import static org.firstinspires.ftc.teamcode.opmodes.PIDConstants.Ki;
 import static org.firstinspires.ftc.teamcode.opmodes.PIDConstants.Kd;
@@ -47,7 +46,7 @@ public class AllStuffPID extends LinearOpMode {
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
-        slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
         lastGamepad1 = new Gamepad();
         slideMotor.reset();
@@ -78,7 +77,7 @@ public class AllStuffPID extends LinearOpMode {
                 clawWrist.positionB();
             }
 
-            while (setPointIsNotReached) {
+            if (setPointIsNotReached) {
                 // obtain encoder position
                 position = slideMotor.getPosition();
 
