@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.control.PIDFController;
 import org.firstinspires.ftc.teamcode.hardware.Chassis;
 import org.firstinspires.ftc.teamcode.hardware.Slide;
 import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
@@ -22,14 +23,7 @@ public class AllStuff extends LinearOpMode {
     Slide slides;
     Motor slideMotor;
     Chassis bobot;
-//    Gamepad lastGamepad1;
-//    double target;
-//    double position;
-//    double error;
-//    double power;
-//    double kP = 1;
-//    final int tolerance = 700;
-//    boolean doPID = true;
+    PIDFController controller;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,13 +31,8 @@ public class AllStuff extends LinearOpMode {
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
-//        slideMotor.getInternal().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
-//        lastGamepad1 = new Gamepad();
-//        slideMotor.reset();
-
-
-
+        controller = new PIDFController(new PIDFController.PIDCoefficients(1, 0, 0.1));
 
         waitForStart();
 
@@ -63,36 +52,33 @@ public class AllStuff extends LinearOpMode {
             }
 
             if (gamepad1.dpad_up) {
-                slideMotor.setPower(.9);
+                controller.setTargetPosition((int) (45 * Motor.getTPD_84()));
             } else if (gamepad1.dpad_down) {
-                slideMotor.setPower(-.6);
-            } else if (gamepad1.left_bumper) {
-                slideMotor.setPower(.1);
-            } else if (gamepad1.right_bumper) {
-                slideMotor.setPower(-.1);
-            } else {
-                slideMotor.setPower(0);
+                controller.setTargetPosition(0);
             }
-//            if (gamepad1.dpad_up) {
-//                target = CPR_84/2.45;
-//                kP = 1;
-//            } else if (gamepad1.dpad_down) {
-//                target = 1;
-//                kP = 0.05 ;
-//            } else if (gamepad1.right_bumper) {
-//                doPID = !doPID;
-//            }
-//            position = -slideMotor.getPosition();
-//            error = target - position;
-//
-//            power = error * kP;
-//
-//            if (doPID && Math.abs(error) > tolerance) {
-//                slideMotor.getInternal().setPower(power);
-//            } else {
-//                power = 0;
-//            }
 
+            double power = controller.update(slideMotor.getPosition());
+            double error = controller.getTargetPosition() - slideMotor.getPosition();
+
+            telemetry.addData("Target", controller.getTargetPosition());
+            telemetry.addData("Position", slideMotor.getPosition());
+            telemetry.addData("Error", error);
+            telemetry.addData("Power", power);
+            telemetry.update();
+
+            slideMotor.setPower(power);
+
+//            if (gamepad1.dpad_up) {
+//                slideMotor.setPower(.9);
+//            } else if (gamepad1.dpad_down) {
+//                slideMotor.setPower(-.6);
+//            } else if (gamepad1.left_bumper) {
+//                slideMotor.setPower(.1);
+//            } else if (gamepad1.right_bumper) {
+//                slideMotor.setPower(-.1);
+//            } else {
+//                slideMotor.setPower(0);
+//            }
             // these three if z statements turn the motor when dpad up is pressed to extend the slide,
             // turn the motor the other way when dpad down is pressed to retract the slide,
             // and stop the slide when no button is pressed
@@ -113,14 +99,6 @@ public class AllStuff extends LinearOpMode {
 
             bobot.setMotorPowers(y, x, rx);
 
-//            telemetry.addData("Target", target);
-//            telemetry.addData("Prop", error/target);
-//            telemetry.addData("Error", error);
-//            telemetry.addData("Pos", position);
-//            telemetry.addData("Pow", power);
-            telemetry.addData("claw", claw.claw.getPosition());
-            telemetry.addData("wrist", clawWrist.claw.getPosition());
-            telemetry.update();
         }
     }
 }
