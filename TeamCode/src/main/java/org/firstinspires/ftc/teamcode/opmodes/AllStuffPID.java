@@ -25,7 +25,9 @@ public class AllStuffPID extends LinearOpMode {
     Motor slideMotor;
     Chassis bobot;
     PIDFController controller;
-    boolean setPointIsNotReached;
+    double power;
+    double error;
+
     @Override
     public void runOpMode() throws InterruptedException {
         claw = new TwoPointServo(0.45, 0.7, "claw", hardwareMap);
@@ -60,8 +62,8 @@ public class AllStuffPID extends LinearOpMode {
                 controller.setTargetPosition(0);
             }
 
-            double power = controller.update(slideMotor.getPosition());
-            double error = controller.getTargetPosition() - slideMotor.getPosition();
+            power = controller.update(slideMotor.getPosition());
+            error = controller.getTargetPosition() - slideMotor.getPosition();
 
             telemetry.addData("Target", controller.getTargetPosition());
             telemetry.addData("Position", slideMotor.getPosition());
