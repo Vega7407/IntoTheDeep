@@ -16,7 +16,7 @@ public class PIDTest extends OpMode {
     public void init() {
         controller = new PIDFController(new PIDFController.PIDCoefficients(1, 0, 0.1));
 
-        arm = new Motor(hardwareMap.get(DcMotorEx.class, "arm"));
+        arm = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
     }
 
     @Override

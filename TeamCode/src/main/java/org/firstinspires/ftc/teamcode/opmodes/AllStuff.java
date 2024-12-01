@@ -51,34 +51,19 @@ public class AllStuff extends LinearOpMode {
                 clawWrist.positionB();
             }
 
+
             if (gamepad1.dpad_up) {
-                controller.setTargetPosition((int) (45 * Motor.getTPD_84()));
+                slideMotor.setPower(.9);
             } else if (gamepad1.dpad_down) {
-                controller.setTargetPosition(0);
+                slideMotor.setPower(-.6);
+            } else if (gamepad1.left_bumper) {
+                slideMotor.setPower(.1);
+            } else if (gamepad1.right_bumper) {
+                slideMotor.setPower(-.1);
+            } else {
+                slideMotor.setPower(0);
             }
 
-            double power = controller.update(slideMotor.getPosition());
-            double error = controller.getTargetPosition() - slideMotor.getPosition();
-
-            telemetry.addData("Target", controller.getTargetPosition());
-            telemetry.addData("Position", slideMotor.getPosition());
-            telemetry.addData("Error", error);
-            telemetry.addData("Power", power);
-            telemetry.update();
-
-            slideMotor.setPower(power);
-
-//            if (gamepad1.dpad_up) {
-//                slideMotor.setPower(.9);
-//            } else if (gamepad1.dpad_down) {
-//                slideMotor.setPower(-.6);
-//            } else if (gamepad1.left_bumper) {
-//                slideMotor.setPower(.1);
-//            } else if (gamepad1.right_bumper) {
-//                slideMotor.setPower(-.1);
-//            } else {
-//                slideMotor.setPower(0);
-//            }
             // these three if z statements turn the motor when dpad up is pressed to extend the slide,
             // turn the motor the other way when dpad down is pressed to retract the slide,
             // and stop the slide when no button is pressed
