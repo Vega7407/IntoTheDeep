@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static java.lang.Math.round;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -25,11 +26,11 @@ public class AllStuffPID extends OpMode {
     Motor slideMotor;
     Chassis bobot;
     PIDFController controller;
-    public static double p = 0.004, i = 0, d = 0.0001;
-    public static double f = 0.1;
-    int target;
+    public static double p = 0, i = 0, d = 0;
+    public static double f = 0;
+    public static int target;
     private final double ticks_in_degree = round(1993.6 / 360);
-
+    public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
 
     @Override
     public void init() {
@@ -40,11 +41,15 @@ public class AllStuffPID extends OpMode {
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bobot = new Chassis(hardwareMap);
         target = 0;
-        controller = new PIDFController(new PIDFController.PIDCoefficients(p, i, d), 0, 0, f);
+        controller = new PIDFController(coefficients, 0, 0, f);
+
     }
 
     @Override
     public void loop() {
+        coefficients.setKP(p);
+        coefficients.setKI(i);
+        coefficients.setKD(d);
         // these two if statements open the servo when A is pressed and close the servo when B is pressed
         if (gamepad1.a) {
             claw.positionA();
@@ -62,8 +67,8 @@ public class AllStuffPID extends OpMode {
         int armPos = slideMotor.getPosition();
         controller.setTargetPosition(target);
         double pid = controller.update(armPos);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
-        double power = pid + ff;
+//        double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
+        double power = pid;
         slideMotor.setPower(power);
 
         if (gamepad1.dpad_up) {
@@ -85,6 +90,11 @@ public class AllStuffPID extends OpMode {
         if (gamepad1.back){
             slides.setSlide();
         }
+
+        FtcDashboard.getInstance().getTelemetry().addData("target", target);
+        FtcDashboard.getInstance().getTelemetry().addData("position", slideMotor.getPosition());
+        FtcDashboard.getInstance().getTelemetry().addData("error", target - slideMotor.getPosition());
+        FtcDashboard.getInstance().getTelemetry().update();
 
         double y = gamepad1.left_stick_x;
         double x = -gamepad1.left_stick_y;
