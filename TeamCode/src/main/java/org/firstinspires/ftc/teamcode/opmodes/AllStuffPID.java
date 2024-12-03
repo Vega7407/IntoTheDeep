@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static java.lang.Math.round;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -15,6 +18,7 @@ import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.hardware.Slide;
 import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
 
+import page.j5155.expressway.ftc.motion.FeedforwardFun;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
@@ -32,6 +36,20 @@ public class AllStuffPID extends OpMode {
     private final double ticks_in_degree = round(1993.6 / 360);
     public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
 
+    public class ArmFeedForward implements FeedforwardFun {
+
+        @Override
+        public Double apply(Double aDouble, Double aDouble2) {
+            return Math.cos(Math.toRadians(aDouble) / ticks_in_degree ) * f;
+        }
+
+        @NonNull
+        @Override
+        public Double apply(double v, @Nullable Double aDouble) {
+            return apply(Double.valueOf(v), aDouble);
+        }
+    }
+
     @Override
     public void init() {
         claw = new TwoPointServo(0.45, 0.7, "claw", hardwareMap);
@@ -39,10 +57,11 @@ public class AllStuffPID extends OpMode {
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.reverse();
         bobot = new Chassis(hardwareMap);
         target = 0;
-        controller = new PIDFController(coefficients, 0, 0, f);
-
+        controller = new PIDFController(coefficients, new ArmFeedForward());
+        // (Double position, Double velocity) -> Math.cos(Math.toRadians(position) / ticks_in_degree) * f
     }
 
     @Override
@@ -66,9 +85,7 @@ public class AllStuffPID extends OpMode {
 
         int armPos = slideMotor.getPosition();
         controller.setTargetPosition(target);
-        double pid = controller.update(armPos);
-//        double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
-        double power = pid;
+        double power = controller.update(armPos);
         slideMotor.setPower(power);
 
         if (gamepad1.dpad_up) {
