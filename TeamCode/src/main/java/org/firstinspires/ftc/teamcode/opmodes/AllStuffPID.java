@@ -30,7 +30,7 @@ public class AllStuffPID extends OpMode {
     Motor slideMotor;
     Chassis bobot;
     PIDFController controller;
-    public static double p = -0.002, i = 0, d = 0.01;
+    public static double p = -0.002, i = 0, d = 0.1;
     public static double f = 0.01;
     public static int target;
     private final double ticks_in_degree = round(1993.6 / 360);
