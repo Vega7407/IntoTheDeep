@@ -42,7 +42,6 @@ class Motor(private val internal: DcMotorEx) {
         while (this.isBusy) {
             //weewoo
         }
-
     }
 
     fun reverse() = when (direction) {

@@ -30,8 +30,8 @@ public class AllStuffPID extends OpMode {
     Motor slideMotor;
     Chassis bobot;
     PIDFController controller;
-    public static double p = 0, i = 0, d = 0;
-    public static double f = 0;
+    public static double p = -0.002, i = 0, d = 0.01;
+    public static double f = 0.01;
     public static int target;
     private final double ticks_in_degree = round(1993.6 / 360);
     public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
@@ -56,8 +56,8 @@ public class AllStuffPID extends OpMode {
         clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.reverse();
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bobot = new Chassis(hardwareMap);
         target = 0;
         controller = new PIDFController(coefficients, new ArmFeedForward());
@@ -83,16 +83,21 @@ public class AllStuffPID extends OpMode {
             clawWrist.positionB();
         }
 
+        if (gamepad1.dpad_up) {
+            target = (550);
+            controller.setTargetPosition(target);
+        } else if (gamepad1.dpad_down) {
+            target = 0;
+            slideMotor.setPower(0.1);
+            controller.setTargetPosition(target);
+
+        }
+
         int armPos = slideMotor.getPosition();
-        controller.setTargetPosition(target);
         double power = controller.update(armPos);
         slideMotor.setPower(power);
 
-        if (gamepad1.dpad_up) {
-            target = (int) (ticks_in_degree * 45);
-        } else if (gamepad1.dpad_down) {
-            target = 0;
-        }
+
 
         // these three if z statements turn the motor when dpad up is pressed to extend the slide,
         // turn the motor the other way when dpad down is pressed to retract the slide,
