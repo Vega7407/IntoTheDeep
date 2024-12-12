@@ -21,6 +21,6 @@ public class Slide {
     }
 
     public void setSlide () {
-        slide.runToPosition((int) 175, 0.69);
+        slide.runToPosition((int) 0, 1);
     }
 }
