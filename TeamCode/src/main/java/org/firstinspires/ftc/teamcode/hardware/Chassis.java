@@ -63,7 +63,7 @@ public class Chassis {
         return position;
     }
 
-    //Allows the bobot to move to a certain position on the field using PID
+    //Allows the bobot to move to a certain position on the field using  PID
     public void moveToPoint(Pose2d point) {
         double p = -0.002, i = 0, d = 0.0001;
         PIDFController xCont, yCont, hCont;
