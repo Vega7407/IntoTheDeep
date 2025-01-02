@@ -1,16 +1,24 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import page.j5155.expressway.ftc.motion.PIDFController;
 
 public class Chassis {
     public Motor frontLeft;
     public Motor frontRight;
     public Motor backLeft;
     public Motor backRight;
+    private Pose2d position;
 
 
     public Chassis(HardwareMap hwMap){
+        this(hwMap, new Pose2d(0.0, 0.0, 0.0));
+    }
+
+    public Chassis(HardwareMap hwMap, Pose2d beginPose) {
         DcMotorEx frontL = hwMap.get(DcMotorEx.class, "frontLeft");
         DcMotorEx frontR = hwMap.get(DcMotorEx.class, "frontRight");
         DcMotorEx backL = hwMap.get(DcMotorEx.class, "backLeft");
@@ -19,6 +27,8 @@ public class Chassis {
         frontRight = new Motor(frontR);
         backLeft = new Motor(backL);
         backRight = new Motor(backR);
+
+        this.position = beginPose;
     }
 
     public void setMotorPowers(double power){
@@ -47,5 +57,28 @@ public class Chassis {
         frontRight.runToPosition(distance, power);
         backLeft.runToPosition(distance, power);
         backRight.runToPosition(distance, power);
+    }
+
+    public Pose2d getPosition() {
+        return position;
+    }
+
+    //Allows the bobot to move to a certain position on the field using PID
+    public void moveToPoint(Pose2d point) {
+        double p = -0.002, i = 0, d = 0.0001;
+        PIDFController xCont, yCont, hCont;
+        PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
+        xCont = new PIDFController(coefficients);
+        yCont = new PIDFController(coefficients);
+        hCont = new PIDFController(coefficients);
+        xCont.setTargetPosition((int) point.position.x);
+        yCont.setTargetPosition((int) point.position.y);
+        hCont.setTargetPosition((int) point.heading.toDouble());
+        while (!this.position.equals(point)) {
+            double xPow = xCont.update(this.position.position.x);
+            double yPow = xCont.update(this.position.position.y);
+            double hPow = xCont.update(this.position.heading.toDouble());
+            setMotorPowers(yPow, xPow, hPow);
+        }
     }
 }

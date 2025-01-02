@@ -14,6 +14,6 @@ public class AutoMovement extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         bobot = new Chassis(hardwareMap);
         waitForStart();
-        bobot.setPosition((int)(Motor.getCPI_312_96() * 20), 1); //11.87in circumference, 573.3 = 1 rotation
+        bobot.setPosition(Motor.getCPI_312_96() * 20, 1); //11.87in circumference, 573.3 = 1 rotation
     }
 }
