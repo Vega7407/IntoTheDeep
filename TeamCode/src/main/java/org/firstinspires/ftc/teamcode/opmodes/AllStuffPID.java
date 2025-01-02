@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static java.lang.Math.round;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -36,24 +33,6 @@ public class AllStuffPID extends OpMode {
     private final double ticks_in_degree = round(1993.6 / 360);
     public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
 
-    public class ArmFeedForward implements FeedforwardFun {
-
-
-        public Double apply(Double aDouble, Double aDouble2) {
-            return Math.cos(Math.toRadians(aDouble) / ticks_in_degree ) * f;
-        }
-
-        @NonNull
-        public Double apply(double v, @Nullable Double aDouble) {
-            return apply(Double.valueOf(v), aDouble);
-        }
-
-        @Override
-        public double compute(double v, @Nullable Double aDouble) {
-            return 0;
-        }
-    }
-
     @Override
     public void init() {
         claw = new TwoPointServo(0.45, 0.7, "claw", hardwareMap);
@@ -64,8 +43,9 @@ public class AllStuffPID extends OpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bobot = new Chassis(hardwareMap);
         target = 0;
-        controller = new PIDFController(coefficients, new ArmFeedForward());
-        // (Double position, Double velocity) -> Math.cos(Math.toRadians(position) / ticks_in_degree) * f
+
+        FeedforwardFun armFF = (position, velocity) -> Math.cos(Math.toRadians(position) / ticks_in_degree) * f;
+        controller = new PIDFController(coefficients, armFF);
     }
 
     @Override
