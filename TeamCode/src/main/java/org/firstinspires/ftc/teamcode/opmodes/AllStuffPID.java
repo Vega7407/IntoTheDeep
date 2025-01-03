@@ -80,8 +80,6 @@ public class AllStuffPID extends OpMode {
         double power = controller.update(armPos);
         slideMotor.setPower(power);
 
-
-
         // these three if z statements turn the motor when dpad up is pressed to extend the slide,
         // turn the motor the other way when dpad down is pressed to retract the slide,
         // and stop the slide when no button is pressed
