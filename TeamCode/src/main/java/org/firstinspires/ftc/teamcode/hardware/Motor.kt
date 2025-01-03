@@ -9,7 +9,7 @@ import kotlin.math.PI
 import kotlin.math.round
 
 
-class Motor(private val internal: DcMotorEx) {
+class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
 
 
     init {
@@ -24,15 +24,7 @@ class Motor(private val internal: DcMotorEx) {
         return internal
     }
 
-    var zeroPowerBehavior: DcMotor.ZeroPowerBehavior by internal::zeroPowerBehavior
     val current: Double = internal.getCurrent(CurrentUnit.AMPS)
-    val isBusy get() = internal.isBusy
-    val position: Int by internal::currentPosition
-
-    var power: Double by internal::power
-    var targetPosition: Int by internal::targetPosition
-    var direction: DcMotorSimple.Direction by internal::direction
-    var mode: DcMotor.RunMode by internal::mode
 
     fun runToPosition(target: Int, power: Double) {
         this.targetPosition = target
@@ -47,6 +39,7 @@ class Motor(private val internal: DcMotorEx) {
     fun reverse() = when (direction) {
         DcMotorSimple.Direction.FORWARD -> internal.direction = DcMotorSimple.Direction.REVERSE
         DcMotorSimple.Direction.REVERSE -> internal.direction = DcMotorSimple.Direction.FORWARD
+        null -> internal.direction = DcMotorSimple.Direction.FORWARD
     }
 
     fun reset() {
