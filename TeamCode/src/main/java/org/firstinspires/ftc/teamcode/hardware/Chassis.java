@@ -17,7 +17,10 @@ import page.j5155.expressway.ftc.motion.PIDFController;
 public class Chassis {
     public static RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
     public static RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
-
+    public static Pose2d blueRight = new Pose2d(36.0, 60.0, -Math.PI/2);
+    public static Pose2d blueLeft = new Pose2d(-26.0, 60.0, -Math.PI/2);
+    public static Pose2d redRight = new Pose2d(26.0, -60.0, Math.PI/2);
+    public static Pose2d redLeft = new Pose2d(-36.0, -60.0, Math.PI/2);
     public Motor frontLeft;
     public Motor frontRight;
     public Motor backLeft;
@@ -26,7 +29,6 @@ public class Chassis {
     public LazyImu lazyImu;
     private MecanumDriveLocalizer localizer;
     private PoseVelocity2d velocity;
-
     public Chassis(HardwareMap hwMap){
         this(hwMap, new Pose2d(0.0, 0.0, 0.0));
     }
@@ -86,6 +88,9 @@ public class Chassis {
         pose = pose.plus(twist.value());
         velocity = twist.velocity().value();
     }
+
+    // pose is 1. the vector of bot position (x and y) and 2. the rotation
+    // twist is difference between two poses
 
     /**
      * Allows the bobot to move to a certain position on the field using PID;

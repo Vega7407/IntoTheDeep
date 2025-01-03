@@ -20,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class MecanumDriveLocalizer {
-    public static final double trackWidth = 16;
+    public static final double trackWidth = 16; // inches
     public static final double inPerTick = Motor.getCPI_312_96();
     public static final MecanumKinematics kinematics = new MecanumKinematics(
             trackWidth, 1);

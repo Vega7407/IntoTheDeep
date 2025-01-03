@@ -67,12 +67,16 @@ public class AllStuffPID extends OpMode {
         }
 
         if (gamepad1.dpad_up) {
-            target = (550);
+            target = (1100);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gamepad1.dpad_down) {
+            target = 700;
+            coefficients.setKP(p);
+            controller.setTargetPosition(target);
+        } else if (gamepad1.back) {
             target = 0;
-            coefficients.setKP(p/10);
+            coefficients.setKP(p/15);
             controller.setTargetPosition(target);
         }
 
@@ -88,10 +92,6 @@ public class AllStuffPID extends OpMode {
         }
         else if (gamepad1.dpad_left){
             slides.retractSlide();
-        }
-
-        if (gamepad1.back){
-            slides.setSlide();
         }
 
         FtcDashboard.getInstance().getTelemetry().addData("target", target);
