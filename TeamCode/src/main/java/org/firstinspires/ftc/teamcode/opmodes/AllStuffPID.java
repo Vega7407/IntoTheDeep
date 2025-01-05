@@ -99,6 +99,7 @@ public class AllStuffPID extends OpMode {
         FtcDashboard.getInstance().getTelemetry().addData("error", target - slideMotor.getPosition());
         FtcDashboard.getInstance().getTelemetry().update();
 
+        // y and x intentionally swapped bc of some weird issue w motors reversed maybe but it works like this
         double y = gamepad1.left_stick_x;
         double x = -gamepad1.left_stick_y;
         double rx = gamepad1.right_stick_x;
