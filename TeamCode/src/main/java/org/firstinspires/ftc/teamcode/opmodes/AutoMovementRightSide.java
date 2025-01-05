@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static org.firstinspires.ftc.teamcode.hardware.Chassis.blueRight;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -14,6 +15,5 @@ public class AutoMovementRightSide extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         bobot = new Chassis(hardwareMap, blueRight);
         waitForStart();
-
     }
 }
