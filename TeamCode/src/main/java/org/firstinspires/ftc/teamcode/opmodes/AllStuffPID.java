@@ -35,8 +35,8 @@ public class AllStuffPID extends OpMode {
 
     @Override
     public void init() {
-        claw = new TwoPointServo(0.45, 0.7, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
+        claw = new TwoPointServo(0.45, 0, "claw", hardwareMap);
+        clawWrist = new TwoPointServo(0.22, 0.6, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         slideMotor.reverse();
@@ -67,12 +67,16 @@ public class AllStuffPID extends OpMode {
         }
 
         if (gamepad1.dpad_up) {
-            target = (550);
+            target = (1000);
+            coefficients.setKP(p);
+            controller.setTargetPosition(target);
+        } else if (gamepad1.dpad_left) {
+            target = (650);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gamepad1.dpad_down) {
             target = 0;
-            coefficients.setKP(p/10);
+            coefficients.setKP(p/2);
             controller.setTargetPosition(target);
         }
 
@@ -85,12 +89,12 @@ public class AllStuffPID extends OpMode {
         // these three if z statements turn the motor when dpad up is pressed to extend the slide,
         // turn the motor the other way when dpad down is pressed to retract the slide,
         // and stop the slide when no button is pressed
-        if (gamepad1.dpad_right){
-            slides.extendSlide();
-        }
-        else if (gamepad1.dpad_left){
-            slides.retractSlide();
-        }
+        // if (gamepad1.dpad_right){
+        //     slides.extendSlide();
+        // }
+        // else if (gamepad1.dpad_left){
+        //     slides.retractSlide();
+        // }
 
         if (gamepad1.back){
             slides.setSlide();
