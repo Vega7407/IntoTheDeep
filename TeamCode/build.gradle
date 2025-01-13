@@ -15,6 +15,7 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'dev.frozenmilk.sinister.sloth.Load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -43,6 +44,11 @@ repositories {
 dependencies {
     implementation project(':FtcRobotController')
 
+    implementation "dev.frozenmilk.sinister.sloth:DashFix:0.0.0"
+    implementation "dev.frozenmilk:Sinister:2.0.1"
+    implementation "dev.frozenmilk.sinister:Sloth:0.0.1"
+    implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
+    implementation "dev.frozenmilk.dairy:Core:1.0.1"
     implementation "com.acmerobotics.roadrunner:ftc:0.1.14"
     implementation "com.acmerobotics.roadrunner:core:1.0.0"
     implementation "com.acmerobotics.roadrunner:actions:1.0.0"
@@ -50,4 +56,19 @@ dependencies {
     implementation "org.ftclib.ftclib:core:2.0.1"
     implementation "page.j5155.roadrunner.expressway:core:0.3.7"
     implementation "page.j5155.roadrunner.expressway:ftc:0.3.7"
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url = 'https://repo.dairy.foundation/releases'
+        }
+        maven {
+            url = 'https://repo.dairy.foundation/snapshots'
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk.sinister.sloth:Load:0.0.2"
+    }
 }

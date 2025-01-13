@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static android.os.SystemClock.sleep;
 import static java.lang.Math.round;
+
+import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,18 +18,27 @@ import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.hardware.Slide;
 import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
 
+import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier;
+import dev.frozenmilk.dairy.core.util.supplier.numeric.EnhancedDoubleSupplier;
+import dev.frozenmilk.dairy.pasteurized.Pasteurized;
+import dev.frozenmilk.dairy.pasteurized.PasteurizedGamepad;
+import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
 import page.j5155.expressway.ftc.motion.FeedforwardFun;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
 @TeleOp
 public class AllStuffPID extends OpMode {
+    SDKGamepad gp1;
+
     TwoPointServo claw;
     TwoPointServo clawWrist;
     Slide slides;
     Motor slideMotor;
     Chassis bobot;
     PIDFController controller;
+    boolean clawToggle;
+    boolean clawWristToggle;
     public static double p = -0.002, i = 0, d = 0.0001;
     public static double f = 0.01;
     public static int target;
@@ -35,8 +47,11 @@ public class AllStuffPID extends OpMode {
 
     @Override
     public void init() {
-        claw = new TwoPointServo(0.45, 0, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.22, 0.6, "clawWrist", hardwareMap);
+        gp1 = new SDKGamepad(gamepad1);
+        claw = new TwoPointServo(0.35, 0, "claw", hardwareMap);
+        claw.positionB();
+        clawWrist = new TwoPointServo(0.20, 0.7, "clawWrist", hardwareMap);
+        clawWrist.positionA();
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         slideMotor.reverse();
@@ -44,44 +59,66 @@ public class AllStuffPID extends OpMode {
         bobot = new Chassis(hardwareMap);
         target = 0;
 
-        FeedforwardFun armFF = (position, velocity) -> Math.cos(Math.toRadians(position) / ticks_in_degree) * f;
+        FeedforwardFun armFF = (position, velocity) -> {
+            Log.d("VEGAff", "v " + velocity + " p " + position);
+            if (velocity != null && Math.abs(velocity) < 10) {
+                Log.d("VEGAff", "positive case");
+                return Math.cos(Math.toRadians(position) / ticks_in_degree) * f;
+            }
+            else if (velocity != null) {
+                Log.d("VEGAff", "negative case");
+                return (-velocity * Math.signum(velocity))*64;
+            }
+            else
+                return f;
+        };
         controller = new PIDFController(coefficients, armFF);
     }
 
     @Override
     public void loop() {
+
         coefficients.setKI(i);
         coefficients.setKD(d);
-        // these two if statements open the servo when A is pressed and close the servo when B is pressed
-        if (gamepad1.a) {
-            claw.positionA();
-        } else if (gamepad1.b) {
-            claw.positionB();
+        // the claw will be toggled between two positions every time a is pressed
+        if (gp1.a().onTrue()) {
+            if (clawToggle) {
+                claw.positionB();
+            } else {
+                claw.positionA();
+            }
+            clawToggle = !clawToggle;
+            Log.d("vega", "claw toggle " + clawToggle);
         }
 
-        // these two if statements rotate the servo up when Y is pressed and rotate the servo down when X is pressed
-        if (gamepad1.y){
-            clawWrist.positionA();
-        } else if (gamepad1.x) {
-            clawWrist.positionB();
+        // the claw wrist will be toggled between two positions every time x is pressed
+        if (gp1.x().onTrue()){
+            if (clawWristToggle){
+                clawWrist.positionA();
+            } else {
+                clawWrist.positionB();
+            }
+            clawWristToggle = !clawWristToggle;
+            Log.d("vega", "claw wrist toggle " + clawWristToggle);
+
         }
 
-        if (gamepad1.dpad_up) {
-            target = (1000);
+        if (gp1.dpadUp().onTrue()) {
+            target = (800);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
-        } else if (gamepad1.dpad_left) {
-            target = (650);
-            coefficients.setKP(p);
+        } else if (gp1.dpadLeft().onTrue()) {
+            target = (450);
+            coefficients.setKP(p/2);
             controller.setTargetPosition(target);
-        } else if (gamepad1.dpad_down) {
+        } else if (gp1.dpadDown().onTrue()) {
             target = 0;
             coefficients.setKP(p/2);
             controller.setTargetPosition(target);
         }
 
         int armPos = slideMotor.getPosition();
-        double power = controller.update(armPos);
+        double power = controller.update(System.nanoTime(), armPos, slideMotor.getVelocity());
         slideMotor.setPower(power);
 
 
@@ -96,8 +133,8 @@ public class AllStuffPID extends OpMode {
         //     slides.retractSlide();
         // }
 
-        if (gamepad1.back){
-            slides.setSlide();
+        if (gp1.back().onTrue()){
+            slides.retractSlide();
         }
 
         FtcDashboard.getInstance().getTelemetry().addData("target", target);
@@ -105,9 +142,9 @@ public class AllStuffPID extends OpMode {
         FtcDashboard.getInstance().getTelemetry().addData("error", target - slideMotor.getPosition());
         FtcDashboard.getInstance().getTelemetry().update();
 
-        double y = gamepad1.left_stick_x;
-        double x = -gamepad1.left_stick_y;
-        double rx = gamepad1.right_stick_x;
+        double y = gp1.leftStickX().state();
+        double x = gp1.leftStickY().state();
+        double rx = gp1.rightStickX().state();
 
         bobot.setMotorPowers(y, x, rx);
     }

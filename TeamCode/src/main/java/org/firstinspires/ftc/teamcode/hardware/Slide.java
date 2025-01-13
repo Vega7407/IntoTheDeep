@@ -17,7 +17,7 @@ public class Slide {
     }
 
     public void retractSlide () {
-        slide.runToPosition((int) 10, 0.69);
+        slide.runToPosition((int) 70, 0.69);
     }
 
     public void setSlide () {
