@@ -50,7 +50,7 @@ public class AllStuffPID extends OpMode {
         gp1 = new SDKGamepad(gamepad1);
         claw = new TwoPointServo(0.35, 0, "claw", hardwareMap);
         claw.positionB();
-        clawWrist = new TwoPointServo(0.20, 0.7, "clawWrist", hardwareMap);
+        clawWrist = new TwoPointServo(0.40, 0, "clawWrist", hardwareMap);
         clawWrist.positionA();
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
@@ -59,20 +59,9 @@ public class AllStuffPID extends OpMode {
         bobot = new Chassis(hardwareMap);
         target = 0;
 
-        FeedforwardFun armFF = (position, velocity) -> {
-            Log.d("VEGAff", "v " + velocity + " p " + position);
-            if (velocity != null && Math.abs(velocity) < 10) {
-                Log.d("VEGAff", "positive case");
-                return Math.cos(Math.toRadians(position) / ticks_in_degree) * f;
-            }
-            else if (velocity != null) {
-                Log.d("VEGAff", "negative case");
-                return (-velocity * Math.signum(velocity))*64;
-            }
-            else
-                return f;
-        };
+        FeedforwardFun armFF = (position, velocity) -> Math.cos(Math.toRadians(position) / ticks_in_degree) * f;
         controller = new PIDFController(coefficients, armFF);
+        clawWrist.positionB();
     }
 
     @Override
@@ -103,17 +92,17 @@ public class AllStuffPID extends OpMode {
 
         }
 
-        if (gp1.dpadUp().onTrue()) {
-            target = (800);
-            coefficients.setKP(p);
-            controller.setTargetPosition(target);
-        } else if (gp1.dpadLeft().onTrue()) {
-            target = (450);
+        if (gamepad1.dpad_right) {
+            target = (850);
             coefficients.setKP(p/2);
             controller.setTargetPosition(target);
-        } else if (gp1.dpadDown().onTrue()) {
-            target = 0;
+        } else if (gamepad1.dpad_left) {
+            target = (400);
             coefficients.setKP(p/2);
+            controller.setTargetPosition(target);
+        } else if (gamepad1.dpad_down) {
+            target = (0);
+            coefficients.setKP(p/4);
             controller.setTargetPosition(target);
         }
 
@@ -135,6 +124,8 @@ public class AllStuffPID extends OpMode {
 
         if (gp1.back().onTrue()){
             slides.retractSlide();
+        } else if (gamepad1.right_bumper) {
+            slides.setSlide();
         }
 
         FtcDashboard.getInstance().getTelemetry().addData("target", target);
