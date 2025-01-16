@@ -40,7 +40,10 @@ public class AllStuffPID extends OpMode {
     boolean clawToggle;
     boolean clawWristToggle;
     public static double p = -0.002, i = 0, d = 0.0001;
-    public static double f = 0.01;
+    public static double normalF = 0.01;
+    public static double zeroF = 0.12;
+    public static double f = normalF;
+//    public static double f = 0.8;
     public static int target;
     private final double ticks_in_degree = round(1993.6 / 360);
     public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
@@ -48,20 +51,30 @@ public class AllStuffPID extends OpMode {
     @Override
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
-        claw = new TwoPointServo(0.35, 0, "claw", hardwareMap);
-        claw.positionB();
+        claw = new TwoPointServo(0.15, 0, "claw", hardwareMap);
         clawWrist = new TwoPointServo(0.40, 0, "clawWrist", hardwareMap);
-        clawWrist.positionA();
+        claw.positionB();
+        clawWrist.positionB();
         slides = new Slide(hardwareMap);
+        slides.retractSlide();
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         slideMotor.reverse();
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bobot = new Chassis(hardwareMap);
         target = 0;
 
-        FeedforwardFun armFF = (position, velocity) -> Math.cos(Math.toRadians(position) / ticks_in_degree) * f;
+        FeedforwardFun armFF = (position, velocity) -> {
+            double distanceFromTop = (Math.abs(position - 650) / 100);
+//            Log.d("VEGAff", "v " + velocity + " p " + position + " factor " + distanceFromTop);
+            if (velocity != null && position > 100) {
+                double ff = (position > 650 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f;
+//                Log.d("VEGAff", "positive case " + ff);
+                return ff;
+            }
+            else
+                return 0;
+        };
         controller = new PIDFController(coefficients, armFF);
-        clawWrist.positionB();
     }
 
     @Override
@@ -92,22 +105,26 @@ public class AllStuffPID extends OpMode {
 
         }
 
-        if (gamepad1.dpad_right) {
-            target = (850);
-            coefficients.setKP(p/2);
+        if (gp1.dpadRight().onTrue()) {
+            f = normalF;
+            target = (800);
+            coefficients.setKP(p);
             controller.setTargetPosition(target);
-        } else if (gamepad1.dpad_left) {
-            target = (400);
-            coefficients.setKP(p/2);
+        } else if (gp1.dpadLeft().onTrue()) {
+            f = normalF;
+            target = (450);
+            coefficients.setKP(p);
             controller.setTargetPosition(target);
-        } else if (gamepad1.dpad_down) {
+        } else if (gp1.dpadDown().onTrue()) {
+            f = zeroF;
             target = (0);
-            coefficients.setKP(p/4);
+            coefficients.setKP(p/1.5);
             controller.setTargetPosition(target);
         }
 
         int armPos = slideMotor.getPosition();
         double power = controller.update(System.nanoTime(), armPos, slideMotor.getVelocity());
+//        Log.d("vega", "motor test " + power + " pos " + slideMotor.getPosition() + " velocity " + slideMotor.getVelocity());
         slideMotor.setPower(power);
 
 
@@ -124,7 +141,7 @@ public class AllStuffPID extends OpMode {
 
         if (gp1.back().onTrue()){
             slides.retractSlide();
-        } else if (gamepad1.right_bumper) {
+        } else if (gp1.rightBumper().state()) {
             slides.setSlide();
         }
 
