@@ -51,8 +51,8 @@ public class AllStuffPID extends OpMode {
     @Override
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
-        claw = new TwoPointServo(0.15, 0, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.40, 0, "clawWrist", hardwareMap);
+        claw = new TwoPointServo(0.18, 0, "claw", hardwareMap);
+        clawWrist = new TwoPointServo(0.25, 0, "clawWrist", hardwareMap);
         claw.positionB();
         clawWrist.positionB();
         slides = new Slide(hardwareMap);
@@ -105,14 +105,14 @@ public class AllStuffPID extends OpMode {
 
         }
 
-        if (gp1.dpadRight().onTrue()) {
+        if (gp1.dpadUp().onTrue()) {
             f = normalF;
-            target = (800);
+            target = (550);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadLeft().onTrue()) {
             f = normalF;
-            target = (450);
+            target = (320);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadDown().onTrue()) {
