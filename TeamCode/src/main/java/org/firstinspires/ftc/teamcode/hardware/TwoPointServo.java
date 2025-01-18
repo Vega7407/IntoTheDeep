@@ -9,10 +9,11 @@ public class TwoPointServo {
     public ServoImplEx claw;
     private final double pointA;
     private final double pointB;
-
-    public TwoPointServo (double pA, double pB, String aName, HardwareMap hwMap) {
+    private final double pointC;
+    public TwoPointServo (double pA, double pB, double pC, String aName, HardwareMap hwMap) {
         pointA = pA;
         pointB = pB;
+        pointC = pC;
         claw = hwMap.get(ServoImplEx.class, aName);
         claw.setPwmRange(new PwmControl.PwmRange(500, 2500));
     }
@@ -23,5 +24,9 @@ public class TwoPointServo {
 
     public void positionB () {
         claw.setPosition(pointB);
+    }
+
+    public void positionC () {
+        claw.setPosition(pointC);
     }
 }

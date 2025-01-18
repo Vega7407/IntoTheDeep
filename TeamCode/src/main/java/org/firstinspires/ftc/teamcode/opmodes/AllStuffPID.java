@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -42,6 +43,7 @@ public class AllStuffPID extends OpMode {
     public static double p = -0.002, i = 0, d = 0.0001;
     public static double normalF = 0.01;
     public static double zeroF = 0.12;
+    public static double fullF = 0.15;
     public static double f = normalF;
 //    public static double f = 0.8;
     public static int target;
@@ -51,12 +53,11 @@ public class AllStuffPID extends OpMode {
     @Override
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
-        claw = new TwoPointServo(0.18, 0, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.25, 0, "clawWrist", hardwareMap);
-        claw.positionB();
+        claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);
+        clawWrist = new TwoPointServo(0.1, 0.045, 0, "clawWrist", hardwareMap);
+        claw.positionA();
         clawWrist.positionB();
         slides = new Slide(hardwareMap);
-        slides.retractSlide();
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         slideMotor.reverse();
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -91,6 +92,9 @@ public class AllStuffPID extends OpMode {
             }
             clawToggle = !clawToggle;
             Log.d("vega", "claw toggle " + clawToggle);
+        } else if (gp1.y().onTrue()) {
+            clawWrist.positionC();
+            clawWristToggle = !clawWristToggle;
         }
 
         // the claw wrist will be toggled between two positions every time x is pressed
@@ -107,18 +111,33 @@ public class AllStuffPID extends OpMode {
 
         if (gp1.dpadUp().onTrue()) {
             f = normalF;
-            target = (550);
+            target = (500);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadLeft().onTrue()) {
-            f = normalF;
-            target = (320);
+            f = zeroF;
+            target = (1100);
+            coefficients.setKP(p);
+            controller.setTargetPosition(target);
+        } else if (gp1.leftBumper().onTrue()) {
+            f = fullF;
+            target = (1200);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadDown().onTrue()) {
             f = zeroF;
             target = (0);
             coefficients.setKP(p/1.5);
+            controller.setTargetPosition(target);
+        } else if (gp1.dpadRight().onTrue()) {
+            f = normalF;
+            target = (350);
+            coefficients.setKP(p);
+            controller.setTargetPosition(target);
+        } else if (gp1.rightBumper().onTrue()) {
+            f = fullF;
+            target = (1100);
+            coefficients.setKP(p);
             controller.setTargetPosition(target);
         }
 

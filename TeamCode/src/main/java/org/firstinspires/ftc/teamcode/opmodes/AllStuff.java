@@ -28,8 +28,8 @@ public class AllStuff extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        claw = new TwoPointServo(0.45, 0.7, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.35, 0.8, "clawWrist", hardwareMap);
+        claw = new TwoPointServo(0.45, 0.7, 0, "claw", hardwareMap);
+        clawWrist = new TwoPointServo(0.35, 0.8, 0, "clawWrist", hardwareMap);
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         bobot = new Chassis(hardwareMap);
