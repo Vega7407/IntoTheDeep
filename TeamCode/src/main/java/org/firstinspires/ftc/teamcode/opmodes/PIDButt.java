@@ -49,10 +49,11 @@ public class PIDButt extends LinearOpMode {
             bobot = new Chassis(hardwareMap);
             wheels = new Motor[4];
             claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);
-            clawWrist = new TwoPointServo(0.1, 0.055, 0, "clawWrist", hardwareMap);
+            clawWrist = new TwoPointServo(0.3, 0.6, 0.9, "clawWrist", hardwareMap);
             slides = new Slide(hardwareMap);
             slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
             slideMotor.reverse();
+
             slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             target = 0;
             FeedforwardFun armFF = (position, velocity) -> {
@@ -88,7 +89,7 @@ public class PIDButt extends LinearOpMode {
 
             claw.positionA();
             sleep (50);
-            clawWrist.positionC();
+            clawWrist.positionA();
             double power;
 
             waitForStart();
@@ -101,10 +102,8 @@ public class PIDButt extends LinearOpMode {
 
 
             PIDStrafe(-15, 1);
-            PIDDrive(40, 2, 470, false);
-            PIDDrive(-39, 1, 300, true);
-            claw.positionA();
-            PIDTurn(15 * PI, 1);
+            PIDDrive(34, 2, 530, false);
+            PIDDrive(-3, 1, 380, true);
     }
 
     public void PIDStrafe(double distance, double tolerance) { // TODO: Adjust Tolerance
@@ -265,9 +264,9 @@ public class PIDButt extends LinearOpMode {
             //1993.6
             double WHEEL_COUNTS_PER_INCH = (int) round((1 / (104 * PI)) * 537.7 * 25.4);
 
-            kp = 0.8;
-            kd = 0; // Constant of derivation
-            ki = 0;
+            kp = 0.7;
+            kd = 0.0001; // Constant of derivation
+            ki = 0.01;
 
             kV = 0;
             kStatic = 0;
@@ -381,7 +380,7 @@ public class PIDButt extends LinearOpMode {
             double WHEEL_COUNTS_PER_INCH = (int) round((1 / (104 * PI)) * 537.7 * 25.4);
 
             kp = 0.8;
-            kd = 0; // Constant of derivation
+            kd = 0.001; // Constant of derivation
             ki = 0.05;
 
             kV = 0;
@@ -455,7 +454,13 @@ public class PIDButt extends LinearOpMode {
 
     public void clip(int target, boolean open) {
         double power;
-        while (Math.abs(slideMotor.getPosition() - target) > 50) {
+
+        while (Math.abs(slideMotor.getPosition() - target) > 40) {
+            if (Math.abs(slideMotor.getPosition() - 250) < 50 && open) {
+                claw.positionB();
+            } else {
+                claw.positionA();
+            }
             coefficients.setKP(p);
             int armPos = slideMotor.getPosition();
             power = controller.update(System.nanoTime(), armPos, slideMotor.getVelocity());
@@ -463,6 +468,13 @@ public class PIDButt extends LinearOpMode {
             slideMotor.setPower(power);
 
         }
+
+        if (open) {
+            claw.positionA();
+        } else {
+            claw.positionB();
+        }
+
     }
 
 }

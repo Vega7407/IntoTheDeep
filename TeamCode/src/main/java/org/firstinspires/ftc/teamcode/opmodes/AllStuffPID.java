@@ -56,18 +56,16 @@ public class AllStuffPID extends OpMode {
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
         claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.1, 0.055, 0, "clawWrist", hardwareMap);
+        clawWrist = new TwoPointServo(0.3, 0.6, 0.9, "clawWrist", hardwareMap);
         claw.positionA();
         clawWrist.positionB();
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
         hangMotor = new Motor(hardwareMap.get(DcMotorEx.class, "hangMotor"));
-        hangMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.reverse();
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bobot = new Chassis(hardwareMap);
         target = 0;
-
         FeedforwardFun armFF = (position, velocity) -> {
             double distanceFromTop = (Math.abs(position - 650) / 100);
 //            Log.d("VEGAff", "v " + velocity + " p " + position + " factor " + distanceFromTop);
@@ -82,10 +80,8 @@ public class AllStuffPID extends OpMode {
         controller = new PIDFController(coefficients, armFF);
 
     }
-
     @Override
     public void loop() {
-
         coefficients.setKI(i);
         coefficients.setKD(d);
         if (gp1.a().onTrue()) {
@@ -100,6 +96,15 @@ public class AllStuffPID extends OpMode {
             clawWrist.positionC();
             clawWristToggle = !clawWristToggle;
         }
+        if (gp1.leftStickButton().onTrue()) {
+            hangMotor.reverse();
+            hangBoolean = !hangBoolean;
+            if (hangBoolean){
+                hangMotor.setPower(1);
+            } else {
+                hangMotor.setPower(0);
+            }
+        }
 
         if (gp1.x().onTrue()){
             if (clawWristToggle){
@@ -109,6 +114,11 @@ public class AllStuffPID extends OpMode {
             }
             clawWristToggle = !clawWristToggle;
             Log.d("vega", "claw wrist toggle " + clawWristToggle);
+        } else if (gp1.b().onTrue()) {
+            f = normalF;
+            target = 680;
+            coefficients.setKP(p);
+            controller.setTargetPosition(target);
         }
 
         if (gp1.dpadUp().onTrue()) {
@@ -161,17 +171,13 @@ public class AllStuffPID extends OpMode {
         // else if (gamepad1.dpad_left){
         //     slides.retractSlide();
         // }
-
-        if (gp1.back().onTrue()){
-            slides.retractSlide();
-        } else if (gp1.rightBumper().state()) {
-            slides.setSlide();
-        }
         
         FtcDashboard.getInstance().getTelemetry().addData("target", target);
         FtcDashboard.getInstance().getTelemetry().addData("position", slideMotor.getPosition());
         FtcDashboard.getInstance().getTelemetry().addData("error", target - slideMotor.getPosition());
         FtcDashboard.getInstance().getTelemetry().update();
+        telemetry.addData("a", slideMotor.getPosition());
+        telemetry.update();
 
         double y = gp1.leftStickX().state();
         double x = gp1.leftStickY().state();
