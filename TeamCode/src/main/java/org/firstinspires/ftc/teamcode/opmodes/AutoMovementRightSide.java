@@ -8,6 +8,7 @@ import android.util.Log;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,16 +29,8 @@ import page.j5155.expressway.ftc.motion.FeedforwardFun;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
-@TeleOp
+@Autonomous
 public class AutoMovementRightSide extends LinearOpMode  {
-    SDKGamepad gp1 = new SDKGamepad(gamepad1);
-
-    TwoPointServo claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);;
-    TwoPointServo clawWrist = new TwoPointServo(0.1, 0.055, 0, "clawWrist", hardwareMap);
-    Slide slides = new Slide(hardwareMap);;
-    Motor slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));;
-    Chassis bobot = new Chassis(hardwareMap);;
-    PIDFController controller;
     boolean clawToggle;
     boolean clawWristToggle;
     public static double p = -0.002, i = 0, d = 0.0001;
@@ -51,55 +44,18 @@ public class AutoMovementRightSide extends LinearOpMode  {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        TwoPointServo claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);;
+        TwoPointServo clawWrist = new TwoPointServo(0.1, 0.055, 0, "clawWrist", hardwareMap);
+        Slide slides = new Slide(hardwareMap);;
+        Motor slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));;
+        Chassis bobot = new Chassis(hardwareMap);;
         slideMotor.reverse();
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         claw.positionA();
         clawWrist.positionB();
 
-        wait(500);
-        bobot.setMotorPowers(1, 1, 1, 1);
 
-        // Set target position for each motor
-        bobot.frontLeft.setTargetPosition(targetTicks);
-        bobot.frontRight.setTargetPosition(targetTicks);
-        bobot.backLeft.setTargetPosition(targetTicks);
-        bobot.backRight.setTargetPosition(targetTicks);
-
-        // Set motors to RUN_TO_POSITION mode
-        bobot.frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        bobot.frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        bobot.backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        bobot.backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        // Start motors with the specified power
-        bobot.frontLeft.setPower(1);
-        bobot.frontRight.setPower(1);
-        bobot.backLeft.setPower(1);
-        bobot.backRight.setPower(1);
-
-        // Wait until all motors reach their target
-        while (opModeIsActive() &&
-                (bobot.frontLeft.isBusy() || bobot.frontRight.isBusy() ||
-                        bobot.backLeft.isBusy() || bobot.backRight.isBusy())) {
-            telemetry.addData("Front Left Position", bobot.frontLeft.getCurrentPosition());
-            telemetry.addData("Front Right Position", bobot.frontRight.getCurrentPosition());
-            telemetry.addData("Back Left Position", bobot.backLeft.getCurrentPosition());
-            telemetry.addData("Back Right Position", bobot.backRight.getCurrentPosition());
-            telemetry.update();
-        }
-
-        // Stop all motors
-        bobot.frontLeft.setPower(0);
-        bobot.frontRight.setPower(0);
-        bobot.backLeft.setPower(0);
-        bobot.backRight.setPower(0);
-
-        // Reset motor modes to use encoders
-        bobot.frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        bobot.frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        bobot.backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        bobot.backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 }
 

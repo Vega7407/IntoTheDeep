@@ -36,6 +36,7 @@ public class AllStuffPID extends OpMode {
     TwoPointServo clawWrist;
     Slide slides;
     Motor slideMotor;
+    Motor hangMotor;
     Chassis bobot;
     PIDFController controller;
     boolean clawToggle;
@@ -47,6 +48,7 @@ public class AllStuffPID extends OpMode {
     public static double f = normalF;
 //    public static double f = 0.8;
     public static int target;
+    boolean hangBoolean = false;
     private final double ticks_in_degree = round(1993.6 / 360);
     public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
 
@@ -54,11 +56,13 @@ public class AllStuffPID extends OpMode {
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
         claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.1, 0.045, 0, "clawWrist", hardwareMap);
+        clawWrist = new TwoPointServo(0.1, 0.055, 0, "clawWrist", hardwareMap);
         claw.positionA();
         clawWrist.positionB();
         slides = new Slide(hardwareMap);
         slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));
+        hangMotor = new Motor(hardwareMap.get(DcMotorEx.class, "hangMotor"));
+        hangMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.reverse();
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bobot = new Chassis(hardwareMap);
@@ -76,6 +80,7 @@ public class AllStuffPID extends OpMode {
                 return 0;
         };
         controller = new PIDFController(coefficients, armFF);
+
     }
 
     @Override
@@ -83,7 +88,6 @@ public class AllStuffPID extends OpMode {
 
         coefficients.setKI(i);
         coefficients.setKD(d);
-        // the claw will be toggled between two positions every time a is pressed
         if (gp1.a().onTrue()) {
             if (clawToggle) {
                 claw.positionB();
@@ -97,7 +101,6 @@ public class AllStuffPID extends OpMode {
             clawWristToggle = !clawWristToggle;
         }
 
-        // the claw wrist will be toggled between two positions every time x is pressed
         if (gp1.x().onTrue()){
             if (clawWristToggle){
                 clawWrist.positionA();
@@ -106,12 +109,11 @@ public class AllStuffPID extends OpMode {
             }
             clawWristToggle = !clawWristToggle;
             Log.d("vega", "claw wrist toggle " + clawWristToggle);
-
         }
 
         if (gp1.dpadUp().onTrue()) {
             f = normalF;
-            target = (500);
+            target = (540);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadLeft().onTrue()) {
@@ -135,10 +137,12 @@ public class AllStuffPID extends OpMode {
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.rightBumper().onTrue()) {
-            f = fullF;
-            target = (1100);
-            coefficients.setKP(p);
-            controller.setTargetPosition(target);
+            hangBoolean = !hangBoolean;
+            if (hangBoolean){
+                hangMotor.setPower(1);
+            } else {
+                hangMotor.setPower(0);
+            }
         }
 
         int armPos = slideMotor.getPosition();
@@ -163,7 +167,7 @@ public class AllStuffPID extends OpMode {
         } else if (gp1.rightBumper().state()) {
             slides.setSlide();
         }
-
+        
         FtcDashboard.getInstance().getTelemetry().addData("target", target);
         FtcDashboard.getInstance().getTelemetry().addData("position", slideMotor.getPosition());
         FtcDashboard.getInstance().getTelemetry().addData("error", target - slideMotor.getPosition());
@@ -174,6 +178,8 @@ public class AllStuffPID extends OpMode {
         double rx = gp1.rightStickX().state();
 
         bobot.setMotorPowers(y, x, rx);
+
+        telemetry.addData("rightStick", rx);
     }
 }
 
