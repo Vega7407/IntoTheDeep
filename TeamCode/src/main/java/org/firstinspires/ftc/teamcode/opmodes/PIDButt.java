@@ -99,11 +99,26 @@ public class PIDButt extends LinearOpMode {
             coefficients.setKD(d);
             f = normalF;
 
+        telemetry.addData("a", slideMotor.getPosition());
+        telemetry.update();
 
 
-            PIDStrafe(-15, 1);
-            PIDDrive(34, 2, 530, false);
-            PIDDrive(-3, 1, 380, true);
+            PIDStrafe(10, 1);
+//            PIDDrive(10, 1, 0, false);
+//            PIDStrafe(3, 1);
+//            PIDDrive(-10, 1, 0, false);
+//            PIDDrive(10, 1, 0, false);
+//            PIDStrafe(3, 1);
+//            PIDDrive(-10, 1, 0, false);
+//            PIDDrive(10, 1, 0, false);
+//            PIDStrafe(3, 1);
+//            PIDDrive(-10, 1, 0, false);
+
+
+        telemetry.addData("arm", slideMotor.getPosition());
+        telemetry.update();
+
+
     }
 
     public void PIDStrafe(double distance, double tolerance) { // TODO: Adjust Tolerance
@@ -151,7 +166,7 @@ public class PIDButt extends LinearOpMode {
             double WHEEL_COUNTS_PER_INCH = (int) round((1 / (104 * PI)) * 537.7 * 25.4);
 
             kp = .75;
-            kd = 0; // Constant of derivation
+            kd = 0.001; // Constant of derivation
             ki = 0;
 
             kV = 0;
@@ -266,7 +281,7 @@ public class PIDButt extends LinearOpMode {
 
             kp = 0.7;
             kd = 0.0001; // Constant of derivation
-            ki = 0.01;
+            ki = 0.005;
 
             kV = 0;
             kStatic = 0;
@@ -277,7 +292,7 @@ public class PIDButt extends LinearOpMode {
             dtS = dt/1000;
 
             error = tolerance + 1;
-
+            clip(target, true);
             while ((Math.abs(error) > tolerance) && opModeIsActive()) { // TODO: replace error[0] with avgError
 
 //
@@ -314,7 +329,7 @@ public class PIDButt extends LinearOpMode {
                 PID = kp * P + kd * ((error - previousError) / dtS) + (ki * area);
 
 //                power = PID + kStatic * Math.signum(PID) + kV * (referenceVelocity * Math.signum(PID));
-                clip(target, true);
+
                 wheels[0].setPower(PID);
                 wheels[1].setPower(-PID);
                 wheels[2].setPower(PID);
@@ -456,7 +471,7 @@ public class PIDButt extends LinearOpMode {
         double power;
 
         while (Math.abs(slideMotor.getPosition() - target) > 40) {
-            if (Math.abs(slideMotor.getPosition() - 250) < 50 && open) {
+            if (Math.abs(slideMotor.getPosition() - 350) < 50 && open) {
                 claw.positionB();
             } else {
                 claw.positionA();
@@ -467,12 +482,6 @@ public class PIDButt extends LinearOpMode {
             controller.setTargetPosition(target);
             slideMotor.setPower(power);
 
-        }
-
-        if (open) {
-            claw.positionA();
-        } else {
-            claw.positionB();
         }
 
     }
