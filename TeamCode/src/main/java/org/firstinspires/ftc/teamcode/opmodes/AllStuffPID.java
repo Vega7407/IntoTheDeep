@@ -157,7 +157,7 @@ public class AllStuffPID extends OpMode {
 
         int armPos = slideMotor.getPosition();
         double power = controller.update(System.nanoTime(), armPos, slideMotor.getVelocity());
-//        Log.d("vega", "motor test " + power + " pos " + slideMotor.getPosition() + " velocity " + slideMotor.getVelocity());
+//        Log.d("vega", "motor test " + power + " pos " + slideMoztor.getPosition() + " velocity " + slideMotor.getVelocity());
         slideMotor.setPower(power);
 
 

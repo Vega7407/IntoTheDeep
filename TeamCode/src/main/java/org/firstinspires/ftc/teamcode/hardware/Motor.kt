@@ -49,6 +49,8 @@ class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
     }
 
 
+    inner class PIDFAction ()
+
     companion object {
         @JvmStatic val CPR_312 = 537.7
         @JvmStatic val CPR_435 = 384.5
@@ -76,5 +78,6 @@ class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
             return motor
         }
     }
+
 }
 
