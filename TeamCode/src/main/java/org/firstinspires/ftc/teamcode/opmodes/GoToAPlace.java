@@ -16,7 +16,7 @@ public class GoToAPlace extends LinearOpMode {
     public void runOpMode() {
         MecanumDrive robot = new MecanumDrive(hardwareMap, new Pose2d(0.0, 0.0, 0.0));
         Action traj = robot.actionBuilder(robot.localizer.getPose())
-                .splineTo(new Vector2d(24.0, 24.0), Math.PI)
+                .strafeTo(new Vector2d(24.0, 24.0))
                 .build();
         Action arm = robot.actionBuilder(robot.localizer.getPose())
                         .strafeTo(new Vector2d(10.0, 30.0))
