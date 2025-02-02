@@ -128,12 +128,12 @@ public class AllStuffPID extends OpMode {
             controller.setTargetPosition(target);
         } else if (gp1.dpadLeft().onTrue()) {
             f = zeroF;
-            target = (1100);
+            target = (1050);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.leftBumper().onTrue()) {
             f = fullF;
-            target = (1200);
+            target = (1240);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadDown().onTrue()) {
