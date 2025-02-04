@@ -52,7 +52,6 @@ import java.util.List;
 
 
 @Config
-@TeleOp
 public final class MecanumDrive {
     public static class Params {
         // IMU orientation

@@ -32,9 +32,11 @@ public class GoToAPlace extends LinearOpMode {
         Claw claw = new Claw(hardwareMap);
         ClawWrist clawWrist = new ClawWrist(hardwareMap);
         Action traj = robot.actionBuilder(robot.localizer.getPose())
+                .strafeTo(new Vector2d(25, 10))
                 .strafeTo(new Vector2d(45, 10))
-                .stopAndAdd(new ParallelAction(clawWrist.clawWristDown()))
-                .waitSeconds(1)
+                .stopAndAdd(clawWrist.clawWristUp())
+                .strafeTo(new Vector2d(35, 10))
+                .waitSeconds(.5)
                 .stopAndAdd(claw.openClaw())
                 .strafeTo(new Vector2d(25, 10))
                 .strafeTo(new Vector2d(15, 10))
@@ -48,22 +50,22 @@ public class GoToAPlace extends LinearOpMode {
         Action push = robot.actionBuilder(robot.localizer.getPose())
                 .strafeTo(new Vector2d(20, -55))
                 .strafeTo(new Vector2d(55, -65))
-                .strafeTo(new Vector2d(55, -85))
-                .strafeTo(new Vector2d(5, -85))  // first one away
-                .strafeTo(new Vector2d(62, -85))
-                .strafeTo(new Vector2d(62, -110))
-                .strafeTo(new Vector2d(15, -110)) // second one away
-                .strafeTo(new Vector2d(60, -110))
-                .strafeTo(new Vector2d(60, -133))
-                .strafeTo(new Vector2d(2, -133))
+                .strafeTo(new Vector2d(55, -80))
+                .strafeTo(new Vector2d(5, -80))  // first one away
+                .strafeTo(new Vector2d(62, -80))
+                .strafeTo(new Vector2d(62, -100))
+                .strafeTo(new Vector2d(15, -100)) // second one away
+                .strafeTo(new Vector2d(68, -100))
+                .strafeTo(new Vector2d(68, -130))
+                .strafeTo(new Vector2d(2, -130))
                 .build();
 
         Actions.runBlocking(claw.closeClaw());
 
         waitForStart();
 
-        Actions.runBlocking(new ParallelAction(arm.runArm(), arm.setTarget(520)
-                , new SequentialAction(arm.setTarget(520), traj, push)));
+        Actions.runBlocking(new ParallelAction(arm.runArm(), arm.setTarget(540)
+                , new SequentialAction(arm.setTarget(540), traj, push)));
 
 //        Actions.runBlocking(new ParallelAction(arm.setTarget(0), arm.runArm(), arm.setTarget(0), new SequentialAction(arm.setTarget(0), back)));
 

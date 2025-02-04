@@ -56,7 +56,7 @@ public class AllStuffPID extends OpMode {
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
         claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.3, 0.6, 0.9, "clawWrist", hardwareMap);
+        clawWrist = new TwoPointServo(0.3, 0.6, 0.75, "clawWrist", hardwareMap);
         claw.positionA();
         clawWrist.positionB();
         slides = new Slide(hardwareMap);
@@ -97,12 +97,11 @@ public class AllStuffPID extends OpMode {
             clawWristToggle = !clawWristToggle;
         }
         if (gp1.leftStickButton().onTrue()) {
-            hangMotor.reverse();
             hangBoolean = !hangBoolean;
             if (hangBoolean){
-                hangMotor.setPower(1);
+                slideMotor.setPower(1);
             } else {
-                hangMotor.setPower(0);
+                slideMotor.setPower(0);
             }
         }
 
@@ -133,7 +132,7 @@ public class AllStuffPID extends OpMode {
             controller.setTargetPosition(target);
         } else if (gp1.leftBumper().onTrue()) {
             f = fullF;
-            target = (1240);
+            target = (1220);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadDown().onTrue()) {
