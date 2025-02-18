@@ -29,4 +29,8 @@ public class TwoPointServo {
     public void positionC () {
         claw.setPosition(pointC);
     }
+
+    public double getPosition() {
+        return claw.getPosition();
+    }
 }

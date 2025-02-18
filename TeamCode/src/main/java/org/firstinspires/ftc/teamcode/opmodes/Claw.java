@@ -12,8 +12,8 @@ public class Claw {
     TwoPointServo claw;
     TwoPointServo clawWrist;
     public Claw (HardwareMap hardwareMap) {
-        claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);
-        claw.positionA();
+        claw = new TwoPointServo(0.63, 0.43, 1, "claw", hardwareMap);
+        clawWrist =  new TwoPointServo(0.67, 1, 0.35, "clawWrist", hardwareMap);
     }
     public class CloseClaw implements Action {
         @Override
@@ -41,7 +41,7 @@ public class Claw {
     public class ClawWristUp implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            clawWrist.positionA();
+            clawWrist.positionB();
             return false;
         }
     }
@@ -53,7 +53,7 @@ public class Claw {
     public class ClawWristDown implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            clawWrist.positionB();
+            clawWrist.positionA();
             return false;
         }
     }

@@ -75,9 +75,6 @@ public class AllStuff extends LinearOpMode {
                 slides.retractSlide();
             }
 
-            if (gamepad1.back){
-                slides.setSlide();
-            }
 
             double y = gamepad1.left_stick_x;
             double x = -gamepad1.left_stick_y;

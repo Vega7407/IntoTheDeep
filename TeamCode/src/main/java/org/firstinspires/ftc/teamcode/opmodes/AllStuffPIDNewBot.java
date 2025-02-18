@@ -29,22 +29,24 @@ import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config
 @TeleOp
-public class AllStuffPID extends OpMode {
+public class AllStuffPIDNewBot extends OpMode {
     SDKGamepad gp1;
 
     TwoPointServo claw;
     TwoPointServo clawWrist;
-    Motor slideMotor;
+    Slide slides;
+    Motor armMotor1;
+    Motor armMotor2;
     Chassis bobot;
     PIDFController controller;
     boolean clawToggle;
     boolean clawWristToggle;
-    public static double p = -0.002, i = 0, d = 0.0001;
+    public static double p = 0.002, i = 0, d = 0.0001;
     public static double normalF = 0.01;
-    public static double zeroF = 0.12;
-    public static double fullF = 0.15;
+    public static double zeroF = -0.07;
+    public static double fullF = 0.3;
     public static double f = normalF;
-//    public static double f = 0.8;
+    //    public static double f = 0.8;
     public static int target;
     boolean hangBoolean = false;
     private final double ticks_in_degree = round(1993.6 / 360);
@@ -53,20 +55,23 @@ public class AllStuffPID extends OpMode {
     @Override
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
-        claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);
-        clawWrist = new TwoPointServo(0.3, 0.6, 0.75, "clawWrist", hardwareMap);
-        claw.positionA();
-        clawWrist.positionB();
-        slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slides"));
-        slideMotor.reverse();
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        claw = new TwoPointServo(0.63, 0.43, 1, "claw", hardwareMap);
+        clawWrist =  new TwoPointServo(0.67, 1, 0.35, "clawWrist", hardwareMap);
+        claw.positionB();
+        clawWrist.positionA();
+        slides = new Slide(hardwareMap);
+        armMotor1 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor1"));
+        armMotor2 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor2"));
+        armMotor1.reverse();
+        armMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bobot = new Chassis(hardwareMap);
         target = 0;
         FeedforwardFun armFF = (position, velocity) -> {
-            double distanceFromTop = (Math.abs(position - 650) / 100);
+            double distanceFromTop = (Math.abs(position - 400) / 100);
 //            Log.d("VEGAff", "v " + velocity + " p " + position + " factor " + distanceFromTop);
             if (velocity != null && position > 100) {
-                double ff = (position > 650 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f;
+                double ff = (position > 400 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f * (1 + (slides.getPosition()/500.0));
 //                Log.d("VEGAff", "positive case " + ff);
                 return ff;
             }
@@ -92,15 +97,8 @@ public class AllStuffPID extends OpMode {
             clawWrist.positionC();
             clawWristToggle = !clawWristToggle;
         }
-        if (gp1.leftStickButton().onTrue()) {
-            hangBoolean = !hangBoolean;
-            if (hangBoolean){
-                slideMotor.setPower(1);
-            } else {
-                slideMotor.setPower(0);
-            }
-        }
 
+//
         if (gp1.x().onTrue()){
             if (clawWristToggle){
                 clawWrist.positionA();
@@ -109,44 +107,55 @@ public class AllStuffPID extends OpMode {
             }
             clawWristToggle = !clawWristToggle;
             Log.d("vega", "claw wrist toggle " + clawWristToggle);
-        } else if (gp1.b().onTrue()) {
-            f = normalF;
-            target = 680;
-            coefficients.setKP(p);
-            controller.setTargetPosition(target);
         }
 
-        if (gp1.dpadUp().onTrue()) {
+        if (gp1.b().onTrue()) {
             f = normalF;
-            target = (540);
+            target = (270);
+            coefficients.setKP(p);
+            controller.setTargetPosition(target);
+        } else if (gp1.dpadUp().onTrue()) {
+            f = 0.01;
+            target = (340);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadLeft().onTrue()) {
-            f = zeroF;
-            target = (1050);
-            coefficients.setKP(p);
-            controller.setTargetPosition(target);
-        } else if (gp1.leftBumper().onTrue()) {
             f = fullF;
-            target = (1220);
+            target = (450);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
-        } else if (gp1.dpadDown().onTrue()) {
+        } else if (gp1.back().onTrue()) {
+            slides.retractSlide();
+//            slides.extendSlide();
+        } else if (gp1.rightBumper().onTrue()) {
+            slides.setPower(0.8);
+        } else if (gp1.rightStickButton().onTrue()) {
+            slides.extendSlide();
+        } else if (gp1.rightBumper().onFalse() && !gp1.leftBumper().onTrue()) {
+            slides.setPower(0);
+        } else if (gp1.leftBumper().onTrue()) {
+            slides.setPower(-1);
+        } else if (gp1.leftBumper().onFalse() && !gp1.rightBumper().onTrue()) {
+            slides.setPower(0);
+        } if (gp1.dpadDown().onTrue()) {
             f = zeroF;
             target = (0);
             coefficients.setKP(p/1.5);
             controller.setTargetPosition(target);
         } else if (gp1.dpadRight().onTrue()) {
-            f = normalF;
-            target = (350);
+            f = 0.01;
+            target = (130);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
+        } else if (Math.abs(armMotor1.getPosition()) < 20 && slides.getPosition() > 2500) {
+            slides.setPower(0);
         }
 
-        int armPos = slideMotor.getPosition();
-        double power = controller.update(System.nanoTime(), armPos, slideMotor.getVelocity());
-//        Log.d("vega", "motor test " + power + " pos " + slideMoztor.getPosition() + " velocity " + slideMotor.getVelocity());
-        slideMotor.setPower(power);
+        int armPos = armMotor1.getPosition();
+        double power = controller.update(System.nanoTime(), armPos, armMotor1.getVelocity());
+        Log.d("vega", "motor test " + power + " pos " + slides.getPosition());
+        armMotor1.setPower(power);
+        armMotor2.setPower(power);
 
 
 
@@ -159,16 +168,20 @@ public class AllStuffPID extends OpMode {
         // else if (gamepad1.dpad_left){
         //     slides.retractSlide();
         // }
-        
+
         FtcDashboard.getInstance().getTelemetry().addData("target", target);
-        FtcDashboard.getInstance().getTelemetry().addData("position", slideMotor.getPosition());
-        FtcDashboard.getInstance().getTelemetry().addData("error", target - slideMotor.getPosition());
+        FtcDashboard.getInstance().getTelemetry().addData("position", armMotor1.getPosition());
+        FtcDashboard.getInstance().getTelemetry().addData("error", target - armMotor1.getPosition());
         FtcDashboard.getInstance().getTelemetry().update();
-        telemetry.addData("a", slideMotor.getPosition());
+        telemetry.addData("armMotor", armMotor1.getPosition());
+        telemetry.addData("armPower", power);
+        telemetry.addData("slidesPos", slides.getPosition());
+        telemetry.addData("claw", claw.getPosition());
+        telemetry.addData("clawWrist", clawWrist.getPosition());
         telemetry.update();
 
-        double y = gp1.leftStickX().state();
-        double x = gp1.leftStickY().state();
+        double y = gp1.leftStickY().state();
+        double x = gp1.leftStickX().state();
         double rx = gp1.rightStickX().state();
 
         bobot.setMotorPowers(y, x, rx);
@@ -176,4 +189,3 @@ public class AllStuffPID extends OpMode {
         telemetry.addData("rightStick", rx);
     }
 }
-

@@ -44,17 +44,18 @@ public class AutoMovementRightSide extends LinearOpMode  {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TwoPointServo claw = new TwoPointServo(0.18, 0, 1, "claw", hardwareMap);;
-        TwoPointServo clawWrist = new TwoPointServo(0.1, 0.055, 0, "clawWrist", hardwareMap);
-        Slide slides = new Slide(hardwareMap);;
-        Motor slideMotor = new Motor(hardwareMap.get(DcMotorEx.class, "slideMotor"));;
-        Chassis bobot = new Chassis(hardwareMap);;
-        slideMotor.reverse();
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        claw.positionA();
-        clawWrist.positionB();
-
+        TwoPointServo claw = new TwoPointServo(0.63, 0.43, 1, "claw", hardwareMap);
+        TwoPointServo clawWrist =  new TwoPointServo(0.67, 1, 0.35, "clawWrist", hardwareMap);
+        claw.positionB();
+        clawWrist.positionA();
+        Slide slides = new Slide(hardwareMap);
+        Motor armMotor1 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor1"));
+        Motor armMotor2 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor2"));
+        armMotor1.reverse();
+        armMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Chassis bobot = new Chassis(hardwareMap);
 
     }
 }

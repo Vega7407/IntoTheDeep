@@ -12,6 +12,9 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
+
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 public class Chassis {
@@ -27,10 +30,11 @@ public class Chassis {
     public Motor backRight;
     private Pose2d pose;
     public LazyImu lazyImu;
-    private MecanumDriveLocalizer localizer;
+    public PinpointDrive drive;
     private PoseVelocity2d velocity;
     public Chassis(HardwareMap hwMap){
         this(hwMap, new Pose2d(0.0, 0.0, 0.0));
+        drive = new PinpointDrive(hwMap, new Pose2d(0.0, 0.0, 0.0));
     }
 
     public Chassis(HardwareMap hwMap, Pose2d beginPose) {
@@ -46,10 +50,9 @@ public class Chassis {
         this.pose = beginPose;
         this.velocity = new PoseVelocity2d(new Vector2d(0.0, 0.0), 0.0);
 
-        this.lazyImu = new LazyImu(hwMap, "imu", new RevHubOrientationOnRobot(
-                logoFacingDirection, usbFacingDirection));
-
-        this.localizer = new MecanumDriveLocalizer(this);
+//        this.lazyImu = new LazyImu(hwMap, "imu", new RevHubOrientationOnRobot(
+//                logoFacingDirection, usbFacingDirection));
+//               }
     }
 
     public void setMotorPowers(double power){
@@ -68,8 +71,8 @@ public class Chassis {
 
     public void setMotorPowers(double y, double x, double rx){
         frontLeft.setPower(y + x + rx);
-        frontRight.setPower(y - x + rx);
-        backLeft.setPower(y - x - rx);
+        frontRight.setPower(y - x - rx);
+        backLeft.setPower(y - x + rx);
         backRight.setPower(y + x - rx);
     }
     public void setPosition(int distance, double power){
@@ -80,13 +83,8 @@ public class Chassis {
     }
 
     public Pose2d getPose() {
-        return pose;
-    }
-
-    public void updatePoseEstimate() {
-        Twist2dDual<Time> twist = localizer.update();
-        pose = pose.plus(twist.value());
-        velocity = twist.velocity().value();
+        drive.updatePoseEstimate();
+        return drive.pose;
     }
 
     // pose is 1. the vector of bot position (x and y) and 2. the rotation
@@ -116,7 +114,8 @@ public class Chassis {
             double hPow = xCont.update(this.pose.heading.toDouble());
             setMotorPowers(yPow, xPow, hPow);
 
-            updatePoseEstimate();
+            drive.localizer.update();
+            drive.updatePoseEstimate();
         }
     }
 }

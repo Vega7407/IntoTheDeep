@@ -40,9 +40,6 @@ public class SlideStuff extends LinearOpMode {
                 slides.retractSlide();
             }
 
-            if (gamepad1.left_bumper) {
-                slides.setSlide();
-            }
 
             telemetry.addData("current position", slides.slide.getPosition());
             telemetry.update();
