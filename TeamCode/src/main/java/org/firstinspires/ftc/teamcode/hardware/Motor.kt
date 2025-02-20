@@ -37,6 +37,13 @@ class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
         }
     }
 
+    // bleh but im lazy - alex
+    fun runToPositionNoWait(target: Int, power: Double) {
+        this.targetPosition = target
+        this.mode = DcMotor.RunMode.RUN_TO_POSITION
+        this.power = power
+    }
+
     fun reverse() = when (direction) {
         DcMotorSimple.Direction.FORWARD -> internal.direction = DcMotorSimple.Direction.REVERSE
         DcMotorSimple.Direction.REVERSE -> internal.direction = DcMotorSimple.Direction.FORWARD
@@ -45,7 +52,7 @@ class Motor(private val internal: DcMotorEx) : DcMotorEx by internal {
 
     fun reset() {
         internal.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        internal.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        internal.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
 

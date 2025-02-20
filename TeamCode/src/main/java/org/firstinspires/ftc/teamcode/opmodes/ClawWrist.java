@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
 public class ClawWrist {
     TwoPointServo clawWrist;
     public ClawWrist(HardwareMap hardwareMap) {
-        clawWrist = new TwoPointServo(0.2, 0.35, 1, "clawWrist", hardwareMap);
-        clawWrist.positionB();
+        clawWrist = new TwoPointServo(0.43, 0.68, 0.16, "clawWrist", hardwareMap);
+        clawWrist.positionA();
     }
 
     public class ClawWristUp implements Action {

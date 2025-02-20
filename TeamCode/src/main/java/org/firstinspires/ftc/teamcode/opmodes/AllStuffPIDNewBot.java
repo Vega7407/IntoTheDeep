@@ -7,7 +7,12 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,6 +23,9 @@ import org.firstinspires.ftc.teamcode.hardware.Chassis;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.hardware.Slide;
 import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier;
 import dev.frozenmilk.dairy.core.util.supplier.numeric.EnhancedDoubleSupplier;
@@ -41,9 +49,11 @@ public class AllStuffPIDNewBot extends OpMode {
     PIDFController controller;
     boolean clawToggle;
     boolean clawWristToggle;
-    public static double p = 0.002, i = 0, d = 0.0001;
+    private FtcDashboard dash = FtcDashboard.getInstance();
+    private List<Action> runningActions = new ArrayList<>();
+    public static double p = 0.0027, i = 0, d = 0.0001;
     public static double normalF = 0.01;
-    public static double zeroF = -0.07;
+    public static double zeroF = -0.2;
     public static double fullF = 0.3;
     public static double f = normalF;
     //    public static double f = 0.8;
@@ -55,8 +65,8 @@ public class AllStuffPIDNewBot extends OpMode {
     @Override
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
-        claw = new TwoPointServo(0.63, 0.43, 1, "claw", hardwareMap);
-        clawWrist =  new TwoPointServo(0.67, 1, 0.35, "clawWrist", hardwareMap);
+        claw = new TwoPointServo(0.75, 0.5, 1, "claw", hardwareMap);
+        clawWrist =  new TwoPointServo(0.43, 0.68, 0.16, "clawWrist", hardwareMap);
         claw.positionB();
         clawWrist.positionA();
         slides = new Slide(hardwareMap);
@@ -68,11 +78,11 @@ public class AllStuffPIDNewBot extends OpMode {
         bobot = new Chassis(hardwareMap);
         target = 0;
         FeedforwardFun armFF = (position, velocity) -> {
-            double distanceFromTop = (Math.abs(position - 400) / 100);
+            double distanceFromTop = (Math.abs(position - 370) / 100);
 //            Log.d("VEGAff", "v " + velocity + " p " + position + " factor " + distanceFromTop);
             if (velocity != null && position > 100) {
-                double ff = (position > 400 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f * (1 + (slides.getPosition()/500.0));
-//                Log.d("VEGAff", "positive case " + ff);
+                double ff = (position > 370 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f * (1 + (slides.getPosition()/20.0));
+                Log.d("VEGAff", "positive case " + ff);
                 return ff;
             }
             else
@@ -83,6 +93,22 @@ public class AllStuffPIDNewBot extends OpMode {
     }
     @Override
     public void loop() {
+        TelemetryPacket packet = new TelemetryPacket();
+
+        // updated based on gamepads
+
+        // update running actions
+        List<Action> newActions = new ArrayList<>();
+        for (Action action : runningActions) {
+            action.preview(packet.fieldOverlay());
+            if (action.run(packet)) {
+                newActions.add(action);
+            }
+        }
+        runningActions = newActions;
+
+        dash.sendTelemetryPacket(packet);
+
         coefficients.setKI(i);
         coefficients.setKD(d);
         if (gp1.a().onTrue()) {
@@ -93,9 +119,6 @@ public class AllStuffPIDNewBot extends OpMode {
             }
             clawToggle = !clawToggle;
             Log.d("vega", "claw toggle " + clawToggle);
-        } else if (gp1.y().onTrue()) {
-            clawWrist.positionC();
-            clawWristToggle = !clawWristToggle;
         }
 
 //
@@ -111,31 +134,31 @@ public class AllStuffPIDNewBot extends OpMode {
 
         if (gp1.b().onTrue()) {
             f = normalF;
-            target = (270);
+            target = (300);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadUp().onTrue()) {
             f = 0.01;
-            target = (340);
+            target = (350);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
         } else if (gp1.dpadLeft().onTrue()) {
             f = fullF;
-            target = (450);
+            target = (420);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
-        } else if (gp1.back().onTrue()) {
-            slides.retractSlide();
+        } else if (gp1.leftBumper().onTrue()) {
+            runningActions.add(slides.retractSlide());
 //            slides.extendSlide();
         } else if (gp1.rightBumper().onTrue()) {
             slides.setPower(0.8);
-        } else if (gp1.rightStickButton().onTrue()) {
-            slides.extendSlide();
-        } else if (gp1.rightBumper().onFalse() && !gp1.leftBumper().onTrue()) {
+        } else if (gp1.y().onTrue()) {
+            runningActions.add(slides.extendSlide());
+        } else if (gp1.rightBumper().onFalse() && !gp1.back().onTrue()) {
             slides.setPower(0);
-        } else if (gp1.leftBumper().onTrue()) {
+        } else if (gp1.back().onTrue()) {
             slides.setPower(-1);
-        } else if (gp1.leftBumper().onFalse() && !gp1.rightBumper().onTrue()) {
+        } else if (gp1.back().onFalse() && !gp1.rightBumper().onTrue()) {
             slides.setPower(0);
         } if (gp1.dpadDown().onTrue()) {
             f = zeroF;
@@ -144,16 +167,24 @@ public class AllStuffPIDNewBot extends OpMode {
             controller.setTargetPosition(target);
         } else if (gp1.dpadRight().onTrue()) {
             f = 0.01;
-            target = (130);
+            target = (210);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
+            clawWrist.setPosition(0.34);
         } else if (Math.abs(armMotor1.getPosition()) < 20 && slides.getPosition() > 2500) {
             slides.setPower(0);
         }
 
+
+
         int armPos = armMotor1.getPosition();
         double power = controller.update(System.nanoTime(), armPos, armMotor1.getVelocity());
         Log.d("vega", "motor test " + power + " pos " + slides.getPosition());
+        if (gp1.dpadDown().onTrue()) {
+
+        } else {
+            power = power * (1 + slides.getPosition()/1500.0);
+        }
         armMotor1.setPower(power);
         armMotor2.setPower(power);
 
@@ -173,6 +204,8 @@ public class AllStuffPIDNewBot extends OpMode {
         FtcDashboard.getInstance().getTelemetry().addData("position", armMotor1.getPosition());
         FtcDashboard.getInstance().getTelemetry().addData("error", target - armMotor1.getPosition());
         FtcDashboard.getInstance().getTelemetry().update();
+
+
         telemetry.addData("armMotor", armMotor1.getPosition());
         telemetry.addData("armPower", power);
         telemetry.addData("slidesPos", slides.getPosition());

@@ -70,10 +70,10 @@ public class Chassis {
     }
 
     public void setMotorPowers(double y, double x, double rx){
-        frontLeft.setPower(y + x + rx);
-        frontRight.setPower(y - x - rx);
-        backLeft.setPower(y - x + rx);
-        backRight.setPower(y + x - rx);
+        frontLeft.setPower((y + x + rx) * 0.8);
+        frontRight.setPower((y - x - rx)* 0.8);
+        backLeft.setPower((y - x + rx) * 0.8);
+        backRight.setPower((y + x - rx) * 0.8);
     }
     public void setPosition(int distance, double power){
         frontLeft.runToPosition(distance, power);

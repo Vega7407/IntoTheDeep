@@ -31,9 +31,9 @@ public class GoToAPlaceLeft extends LinearOpMode {
         Arm arm = new Arm(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         ClawWrist clawWrist = new ClawWrist(hardwareMap);
-        Action move = bobot.drive.actionBuilder(new Pose2d(36.0, 60.0, -Math.PI/2))
-                .strafeTo(new Vector2d(2.8, -32.0))
-                .strafeTo(new Vector2d(24.3, -32.0))
+        Action move = bobot.drive.actionBuilder(new Pose2d(13.0, -61.0, -Math.PI/2))
+                .strafeTo(new Vector2d(10.2, -38.2))
+                .waitSeconds(1)
                 .setTangent(Math.PI/2)
                 .splineTo(new Vector2d(46.5, -9.9), -Math.PI/2)
                 .strafeTo(new Vector2d(46.5, -60.0))
@@ -45,10 +45,12 @@ public class GoToAPlaceLeft extends LinearOpMode {
                 .strafeTo(new Vector2d(62.3, -62.0))
                 .waitSeconds(0.2)
                 .strafeTo(new Vector2d(2.3, -38.1))
+                .strafeTo(new Vector2d(3.2, -33.5))
                 .waitSeconds(0.2)
                 .strafeTo(new Vector2d(46.5, -62.0))
                 .waitSeconds(0.2)
                 .strafeTo(new Vector2d(2.3, -38.1))
+                .strafeTo(new Vector2d(3.2, -33.5))
                 .waitSeconds(0.2)
                 .strafeTo(new Vector2d(46.5, -62.0))
                 .build();
