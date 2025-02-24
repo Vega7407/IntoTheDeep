@@ -26,7 +26,7 @@ public class Slide {
     public class extendSlide implements Action {
 
         public extendSlide () {
-            slide.runToPositionNoWait(2650, 1);
+            slide.runToPositionNoWait(3000, 1);
         }
 
         @Override
@@ -35,8 +35,20 @@ public class Slide {
         }
     }
 
+    public class runToPosition implements Action {
+        public runToPosition(int position) {
+            slide.runToPositionNoWait(position, 1);
+        }
+
+        @Override
+        public boolean run (@NonNull TelemetryPacket packet) {
+            return false;
+        }
+    }
     public class retractSlide implements Action {
         public retractSlide() {
+            slide.runToPositionNoWait(0, 1);
+            slide.runToPositionNoWait(0, 1);
             slide.runToPositionNoWait(0, 1);
         }
 
@@ -81,6 +93,9 @@ public class Slide {
 
     public void setPower (double power) {
         slide.setPower(power);
+    }
+    public Action runToPosition(int position) {
+        return new runToPosition(position);
     }
 
     public int getPosition() {

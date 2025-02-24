@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static java.lang.Math.round;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -19,17 +21,7 @@ import page.j5155.expressway.ftc.motion.PIDFController;
 
 public class Arm {
     PIDFController controller;
-    FeedforwardFun armFF = (position, velocity) -> {
-            double distanceFromTop = (Math.abs(position - 400) / 100);
-//            Log.d("VEGAff", "v " + velocity + " p " + position + " factor " + distanceFromTop);
-            if (velocity != null && position > 100) {
-                double ff = (position > 400 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f;
-//                Log.d("VEGAff", "positive case " + ff);
-                return ff;
-            }
-            else
-                return 0;
-    };
+    FeedforwardFun armFF;
     boolean clawToggle = false;
     boolean clawWristToggle;
     public static double p = 0.002, i = 0, d = 0.0001;
@@ -54,6 +46,17 @@ public class Arm {
         armMotor1.reverse();
         armMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armFF = (position, velocity) -> {
+            double distanceFromTop = (Math.abs(position - 370) / 100);
+//            Log.d("VEGAff", "v " + velocity + " p " + position + " factor " + distanceFromTop);
+            if (velocity != null && position > 100) {
+                double ff = (position > 370 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f * (1 + (slides.getPosition()/20.0));
+                Log.d("VEGAff", "positive case " + ff);
+                return ff;
+            }
+            else
+                return 0;
+        };
         controller = new PIDFController(coefficients, armFF);
     }
 

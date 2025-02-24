@@ -39,6 +39,9 @@ repositories {
     maven {
         url = 'https://repo.dairy.foundation/snapshots'
     }
+    maven {
+        url = "https://maven.zharel.me/snapshots"
+    }
 }
 
 dependencies {
@@ -49,12 +52,14 @@ dependencies {
     implementation "dev.frozenmilk.sinister:Sloth:0.0.1"
     implementation "dev.frozenmilk.dairy:Pasteurized:1.0.0"
     implementation "dev.frozenmilk.dairy:Core:1.0.1"
-//    implementation "dev.frozenmilk:Wavedash:SNAPSHOT-590e9e3"
+    implementation "dev.frozenmilk:Wavedash:SNAPSHOT-590e9e3"
 //    implementation "com.acmerobotics.roadrunner:ftc:0.1.20"
     implementation "com.acmerobotics.roadrunner:core:1.0.1"
     implementation "com.acmerobotics.roadrunner:actions:1.0.1"
+    implementation "com.acmerobotics.roadrunner:ftc:0.1.21-RC-3"
+
+
     implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
-    implementation "page.j5155.roadrunner:ftc-otos:0.1.2+0.1.14"
     implementation "org.ftclib.ftclib:core:2.0.1"
     implementation "page.j5155.roadrunner.expressway:core:0.3.7"
     implementation "page.j5155.roadrunner.expressway:ftc:0.3.7"
@@ -69,6 +74,7 @@ buildscript {
         maven {
             url = 'https://repo.dairy.foundation/snapshots'
         }
+
     }
     dependencies {
         classpath "dev.frozenmilk.sinister.sloth:Load:0.0.2"

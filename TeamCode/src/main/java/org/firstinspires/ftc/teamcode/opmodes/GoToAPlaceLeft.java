@@ -1,21 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Chassis;
-import org.firstinspires.ftc.teamcode.hardware.Motor;
-import org.firstinspires.ftc.teamcode.hardware.Slide;
-import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
 
 //import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
@@ -31,28 +23,10 @@ public class GoToAPlaceLeft extends LinearOpMode {
         Arm arm = new Arm(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         ClawWrist clawWrist = new ClawWrist(hardwareMap);
-        Action move = bobot.drive.actionBuilder(new Pose2d(13.0, -61.0, -Math.PI/2))
-                .strafeTo(new Vector2d(10.2, -38.2))
+        Action move = bobot.drive.actionBuilder(new Pose2d(0.0, 0.0, Math.PI/2))
+                .strafeTo(new Vector2d(24, 0))
                 .waitSeconds(1)
-                .setTangent(Math.PI/2)
-                .splineTo(new Vector2d(46.5, -9.9), -Math.PI/2)
-                .strafeTo(new Vector2d(46.5, -60.0))
-                .strafeTo(new Vector2d(46.5, -9.9))
-                .strafeTo(new Vector2d(55.5, -9.9))
-                .strafeTo(new Vector2d(55.5, -60.0))
-                .strafeTo(new Vector2d(55.5, -9.9))
-                .strafeTo(new Vector2d(62.3 , -9.9))
-                .strafeTo(new Vector2d(62.3, -62.0))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(2.3, -38.1))
-                .strafeTo(new Vector2d(3.2, -33.5))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(46.5, -62.0))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(2.3, -38.1))
-                .strafeTo(new Vector2d(3.2, -33.5))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(46.5, -62.0))
+                .turn(Math.PI/2)
                 .build();
 //        Action traj = robot.actionBuilder(robot.localizer.getPose())
 //                .strafeTo(new Vector2d(40, -10))

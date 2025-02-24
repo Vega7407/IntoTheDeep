@@ -4,22 +4,20 @@ import static org.firstinspires.ftc.teamcode.hardware.MecanumDriveLocalizer.with
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Twist2dDual;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.LazyHardwareMapImu;
 import com.acmerobotics.roadrunner.ftc.LazyImu;
-import com.acmerobotics.roadrunner.Time;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.util.roadrunner.MecanumDrive;
 
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 public class Chassis {
     public static RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-    public static RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+    public static RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.DOWN;
     public static Pose2d blueRight = new Pose2d(36.0, 60.0, -Math.PI/2);
     public static Pose2d blueLeft = new Pose2d(-26.0, 60.0, -Math.PI/2);
     public static Pose2d redRight = new Pose2d(26.0, -60.0, Math.PI/2);
@@ -30,11 +28,11 @@ public class Chassis {
     public Motor backRight;
     private Pose2d pose;
     public LazyImu lazyImu;
-    public PinpointDrive drive;
+    public MecanumDrive drive;
     private PoseVelocity2d velocity;
     public Chassis(HardwareMap hwMap){
         this(hwMap, new Pose2d(0.0, 0.0, 0.0));
-        drive = new PinpointDrive(hwMap, new Pose2d(0.0, 0.0, 0.0));
+        drive = new MecanumDrive(hwMap, new Pose2d(0.0, 0.0, 0.0));
     }
 
     public Chassis(HardwareMap hwMap, Pose2d beginPose) {
@@ -50,9 +48,9 @@ public class Chassis {
         this.pose = beginPose;
         this.velocity = new PoseVelocity2d(new Vector2d(0.0, 0.0), 0.0);
 
-//        this.lazyImu = new LazyImu(hwMap, "imu", new RevHubOrientationOnRobot(
-//                logoFacingDirection, usbFacingDirection));
-//               }
+        this.lazyImu = new LazyHardwareMapImu(hwMap, "imu", new RevHubOrientationOnRobot(
+                logoFacingDirection, usbFacingDirection));
+
     }
 
     public void setMotorPowers(double power){
@@ -70,11 +68,18 @@ public class Chassis {
     }
 
     public void setMotorPowers(double y, double x, double rx){
-        frontLeft.setPower((y + x + rx) * 0.8);
-        frontRight.setPower((y - x - rx)* 0.8);
-        backLeft.setPower((y - x + rx) * 0.8);
-        backRight.setPower((y + x - rx) * 0.8);
+        frontLeft.setPower((y + x + rx));
+        frontRight.setPower((y - x - rx));
+        backLeft.setPower((y - x + rx));
+        backRight.setPower((y + x - rx));
     }
+    public void setMotorPowersSlow(double y, double x, double rx){
+        frontLeft.setPower((y + x + rx) * 0.2);
+        frontRight.setPower((y - x - rx) * 0.2);
+        backLeft.setPower((y - x + rx) * 0.2);
+        backRight.setPower((y + x - rx) * 0.2);
+    }
+
     public void setPosition(int distance, double power){
         frontLeft.runToPosition(distance, power);
         frontRight.runToPosition(distance, power);
@@ -84,7 +89,7 @@ public class Chassis {
 
     public Pose2d getPose() {
         drive.updatePoseEstimate();
-        return drive.pose;
+        return drive.localizer.getPose();
     }
 
     // pose is 1. the vector of bot position (x and y) and 2. the rotation
