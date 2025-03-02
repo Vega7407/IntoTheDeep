@@ -7,7 +7,13 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -15,16 +21,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 
+import org.ejml.dense.row.mult.VectorVectorMult_CDRM;
 import org.firstinspires.ftc.teamcode.hardware.Chassis;
 import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.hardware.Slide;
 import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier;
 import dev.frozenmilk.dairy.core.util.supplier.numeric.EnhancedDoubleSupplier;
 import dev.frozenmilk.dairy.pasteurized.Pasteurized;
 import dev.frozenmilk.dairy.pasteurized.PasteurizedGamepad;
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
+import dev.frozenmilk.mercurial.commands.groups.Parallel;
 import page.j5155.expressway.ftc.motion.FeedforwardFun;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
@@ -44,18 +55,90 @@ public class AutoMovementRightSide extends LinearOpMode  {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        double up = Math.PI/2;
+        double left = Math.PI;
+        double down = - Math.PI / 2;
 
-        TwoPointServo claw = new TwoPointServo(0.63, 0.43, 1, "claw", hardwareMap);
-        TwoPointServo clawWrist =  new TwoPointServo(0.67, 1, 0.35, "clawWrist", hardwareMap);
-        claw.positionB();
-        clawWrist.positionA();
-        Slide slides = new Slide(hardwareMap);
-        Motor armMotor1 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor1"));
-        Motor armMotor2 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor2"));
-        armMotor1.reverse();
-        armMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Pose2d blueRight = new Pose2d(13.0, 61.0, down);
+        Pose2d blueLeft = new Pose2d(-13.0, 61.0, down);
+        Pose2d redRight = new Pose2d(13.0, -61.0, down);
+        Pose2d redLeft = new Pose2d(-13.0, -61.0, up);
+        Pose2d zero = new Pose2d(0, 0, 0);
+
+        Claw claw = new Claw(hardwareMap);
+        ClawWrist clawWrist = new ClawWrist(hardwareMap);
+        Arm arm = new Arm(hardwareMap);
         Chassis bobot = new Chassis(hardwareMap);
+        SlideAuto slides = new SlideAuto(hardwareMap);
+
+        Action parkRight = bobot.drive.actionBuilder(redRight)
+                .strafeTo(new Vector2d(3.2, -34.2))
+                .build();
+
+        Action clip = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
+                .stopAndAdd(new SequentialAction(new ParallelAction(clawWrist.clawWristSet(0.72), arm.setTarget(360))))
+                .waitSeconds(0.8)
+                .stopAndAdd( slides.prepSlide())
+                .waitSeconds(1)
+                .stopAndAdd(slides.clipSlide())
+                .waitSeconds(0.5)
+                .stopAndAdd(new ParallelAction(claw.openClaw(), slides.retractSlide()))
+                .build();
+
+        Action wall = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
+                .stopAndAdd(arm.setTarget(210))
+                .waitSeconds(1)
+                .stopAndAdd(slides.runToPosition(2000))
+                .waitSeconds(1)
+                .stopAndAdd(slides.retractSlide())
+                .waitSeconds(1)
+                .stopAndAdd(clawWrist.clawWristSet(0.34))
+                .waitSeconds(1)
+                .stopAndAdd(claw.openClaw())
+                .waitSeconds(1)
+                .stopAndAdd(claw.closeClaw())
+                .build();
+
+        Action test = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
+                .stopAndAdd(slides.clipSlide())
+                .waitSeconds(1)
+                .stopAndAdd(slides.retractSlide())
+                .build();
+
+        Action motion = bobot.drive.actionBuilder(redRight)
+                .strafeTo(new Vector2d(3.2, -32.2))
+//                .strafeTo(new Vector2d(32.3, -31.2))
+//                .setTangent(up)
+//                .strafeTo(new Vector2d(36.3, -2))
+//                .turn(Math.PI * 0.93)
+//                .strafeTo(new Vector2d(42, -2))
+//                .strafeTo(new Vector2d(40, -60.0))
+//                .strafeTo(new Vector2d(38, -2))
+//                .strafeTo(new Vector2d(44.5, -2))
+//                .strafeTo(new Vector2d(44.5, -60.0))
+//                .strafeTo(new Vector2d(44.5, -2))
+//                .strafeTo(new Vector2d(50.3 , -2))
+//                .strafeTo(new Vector2d(50.3, -62.0))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(2.3, -38.1))
+//                .strafeTo(new Vector2d(3.2, -33.5))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(46.5, -62.0))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(2.3, -38.1))
+//                .strafeTo(new Vector2d(3.2, -33.5))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(46.5, -62.0))
+                .build();
+
+        Actions.runBlocking(claw.closeClaw());
+
+        waitForStart();
+
+//        Actions.runBlocking(new ParallelAction(arm.runArm(),new SequentialAction(motion, clip)));
+//        Actions.runBlocking(new SequentialAction(new ParallelAction(clawWrist.clawWristUp(), slides.clipSlide()), new ParallelAction(claw.openClaw(), slides.retractSlide())));
+        Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(motion, clip)));
+//        Actions.runBlocking(clip);
 
     }
 }

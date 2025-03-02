@@ -25,6 +25,7 @@ public class AutonTest extends LinearOpMode {
         Pose2d blueLeft = new Pose2d(-13.0, 61.0, down);
         Pose2d redRight = new Pose2d(13.0, -61.0, up);
         Pose2d redLeft = new Pose2d(-13.0, -61.0, up);
+        Pose2d zero = new Pose2d(0, 0, 0);
 
         Chassis bobot = new Chassis(hardwareMap);
         Action move = bobot.drive.actionBuilder(redRight)
@@ -51,8 +52,12 @@ public class AutonTest extends LinearOpMode {
                 .strafeTo(new Vector2d(46.5, -62.0))
                 .build();
 
+        Action test = bobot.drive.actionBuilder(zero)
+                .strafeTo(new Vector2d(24, 0))
+                .build();
+
         waitForStart();
 
-        Actions.runBlocking(move);
+        Actions.runBlocking(test);
     }
 }

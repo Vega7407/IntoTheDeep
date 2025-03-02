@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import android.util.Log;
 
@@ -11,22 +11,91 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.annotations.ExpansionHubPIDFVelocityParams;
 
+import org.firstinspires.ftc.teamcode.hardware.Motor;
 import org.firstinspires.ftc.teamcode.opmodes.Arm;
 
 import java.nio.channels.AcceptPendingException;
 
+import page.j5155.expressway.ftc.motion.FeedforwardFun;
+import page.j5155.expressway.ftc.motion.PIDFController;
 
-public class Slide {
+
+
+
+public class SlideAuto {
     public Motor slide;
+    PIDFController controller;
+    FeedforwardFun armFF;
+    public static double p = 0.001, i = 0, d = 0.0001;
+    public static double f;
+    int newPosition = 0;
+    private int targetPosition = 0;
 
-    public Slide (HardwareMap hwMap) {
+    public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
+    public SlideAuto (HardwareMap hwMap) {
         slide = new Motor(hwMap.get(DcMotorEx.class, "slides"));
+        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        controller = new PIDFController(coefficients);
+    }
+
+    public class RunSlide implements Action {
+        public RunSlide() {
+
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            f = 0.01;
+            coefficients.setKP(p);
+            coefficients.setKI(i);
+            coefficients.setKD(d);
+            double power = controller.update(System.nanoTime(), slide.getPosition(), slide.getVelocity());
+            slide.setPower(power);
+
+            return true;
+        }
+    }
+
+    public Action runSlide() {
+        return new RunSlide();
+    }
+
+    public class prepSlide implements Action {
+        public prepSlide() {
+
+        }
+
+        @Override
+        public boolean run (@NonNull TelemetryPacket packet) {
+            slide.runToPosition(490, 1);
+            return slide.isBusy();
+        }
+    }
+
+    public Action prepSlide() {
+        return new prepSlide();
+    }
+
+    public class clipSlide implements  Action {
+        public clipSlide() {
+
+        }
+
+        @Override
+        public boolean run (@NonNull TelemetryPacket packet) {
+            slide.runToPosition(1100, 1);
+            return slide.isBusy();
+        }
+    }
+
+    public Action clipSlide() {
+        return new clipSlide();
     }
 
     public class extendSlide implements Action {
 
         public extendSlide () {
-            slide.runToPositionNoWait(3000, 1);
+            slide.runToPosition(3000, 1);
         }
 
         @Override
@@ -36,24 +105,29 @@ public class Slide {
     }
 
     public class RunToPosition implements Action {
+
+
         public RunToPosition(int position) {
-            slide.runToPositionNoWait(position, 1);
+            newPosition = position;
         }
 
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
+            targetPosition = newPosition;
+            controller.setTargetPosition(targetPosition);
             return false;
         }
     }
     public class retractSlide implements Action {
         public retractSlide() {
-            slide.runToPositionNoWait(0, 1);
+
+
         }
 
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
             boolean stop = shouldResetZeroPos();
-
+            slide.runToPositionNoWait(0, 1);
             if (stop) {
                 slide.setPower(0);
                 slide.reset();

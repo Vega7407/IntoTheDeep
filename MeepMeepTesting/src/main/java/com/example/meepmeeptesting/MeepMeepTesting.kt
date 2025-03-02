@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
     myBot.runAction(
         myBot.drive.actionBuilder(redRight)
             .strafeTo(Vector2d(3.2, -34.2))
-            .strafeTo(Vector2d(26.3, -34.2))
+            .strafeTo(Vector2d(34.3, -34.2))
             .setTangent(up)
             .splineTo(Vector2d(46.5, -9.9), down)
             .strafeTo(Vector2d(46.5, -60.0))

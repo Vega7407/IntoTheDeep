@@ -148,7 +148,7 @@ public class AllStuffPIDNewBot extends OpMode {
             coefficients.setKP(p);
             clawWrist.positionB();
             controller.setTargetPosition(target);
-            runningActions.add(slides.runToPosition(450));
+            runningActions.add(slides.runToPosition(500));
         } else if (gp1.dpadUp().onTrue()) {
             f = 0.01;
             target = (360);
@@ -171,6 +171,13 @@ public class AllStuffPIDNewBot extends OpMode {
         } else if (gp1.back().onFalse() && !gp1.rightBumper().onTrue()) {
             slides.setPower(0);
         }
+
+        if (gp1.rightStickButton().onTrue()) {
+            target = (0);
+            coefficients.setKP(p*8);
+            controller.setTargetPosition(target);
+        }
+
         if (gp1.dpadDown().onTrue() && Math.abs(slides.getPosition()) < 20) {
             f = zeroF;
             target = (0);
@@ -237,11 +244,11 @@ public class AllStuffPIDNewBot extends OpMode {
         telemetry.addData("backRight", bobot.backRight.getPower());
         telemetry.addData("frontRight", bobot.frontRight.getPower());
         telemetry.addLine("");
-        telemetry.addData("frontLeft", bobot.frontLeft.getPosition());
+        telemetry.addData("frontLeft", bobot.frontLeft.getDirection());
         telemetry.addData("backLeft", bobot.backLeft.getCurrentPosition());
         telemetry.addData("backRight", bobot.backRight.getCurrentPosition());
         telemetry.addData("frontRight", bobot.frontRight.getPosition());
-        telemetry.update();
+//        telemetry.update();
 
         double y = gp1.leftStickY().state();
         double x = gp1.leftStickX().state();

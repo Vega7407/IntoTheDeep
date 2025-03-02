@@ -39,7 +39,6 @@ public class Arm {
     public static PIDFController.PIDCoefficients coefficients = new PIDFController.PIDCoefficients(p,i,d);
 
     public Arm(HardwareMap hardwareMap) {
-
         slides = new Slide(hardwareMap);
         armMotor1 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor1"));
         armMotor2 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor2"));
@@ -71,6 +70,7 @@ public class Arm {
             coefficients.setKP(p);
             coefficients.setKI(i);
             coefficients.setKD(d);
+
             armPos = armMotor1.getPosition();
             double power = controller.update(System.nanoTime(), armPos, armMotor1.getVelocity());
 //        Log.d("vega", "motor test " + power + " pos " + slideMoztor.getPosition() + " velocity " + slideMotor.getVelocity());

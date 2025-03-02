@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.LazyHardwareMapImu;
 import com.acmerobotics.roadrunner.ftc.LazyImu;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -44,6 +45,10 @@ public class Chassis {
         frontRight = new Motor(frontR);
         backLeft = new Motor(backL);
         backRight = new Motor(backR);
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         this.pose = beginPose;
         this.velocity = new PoseVelocity2d(new Vector2d(0.0, 0.0), 0.0);
@@ -74,10 +79,10 @@ public class Chassis {
         backRight.setPower((y + x - rx));
     }
     public void setMotorPowersSlow(double y, double x, double rx){
-        frontLeft.setPower((y + x + rx) * 0.2);
-        frontRight.setPower((y - x - rx) * 0.2);
-        backLeft.setPower((y - x + rx) * 0.2);
-        backRight.setPower((y + x - rx) * 0.2);
+        frontLeft.setPower((y + x + rx) * 0.7);
+        frontRight.setPower((y - x - rx) * 0.7);
+        backLeft.setPower((y - x + rx) * 0.7);
+        backRight.setPower((y + x - rx) * 0.7);
     }
 
     public void setPosition(int distance, double power){

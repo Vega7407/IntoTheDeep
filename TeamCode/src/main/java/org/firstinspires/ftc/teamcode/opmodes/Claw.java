@@ -12,8 +12,8 @@ public class Claw {
     TwoPointServo claw;
     TwoPointServo clawWrist;
     public Claw (HardwareMap hardwareMap) {
-        claw = new TwoPointServo(0.75, 0.5, 1, "claw", hardwareMap);
-        clawWrist =  new TwoPointServo(0.43, 0.68, 0.16, "clawWrist", hardwareMap);
+        claw = new TwoPointServo(0.38, 0.15, 1, "claw", hardwareMap);
+        clawWrist =  new TwoPointServo(0.43, 0.72, 0.16, "clawWrist", hardwareMap);
     }
     public class CloseClaw implements Action {
         @Override

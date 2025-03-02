@@ -147,15 +147,16 @@ public class OutreachOpMode extends OpMode {
             target = (360);
             coefficients.setKP(p);
             controller.setTargetPosition(target);
-        } else if (gp1.rightBumper().onTrue()) {
-            slides.setPower(1);
-        } else if (gp1.rightBumper().onFalse() && !gp1.back().onTrue()) {
-            slides.setPower(0);
-        } else if (gp1.back().onTrue()) {
-            slides.setPower(-1);
-        } else if (gp1.back().onFalse() && !gp1.rightBumper().onTrue()) {
-            slides.setPower(0);
         }
+//        else if (gp1.rightBumper().onTrue()) {
+//            slides.setPower(1);
+//        } else if (gp1.rightBumper().onFalse() && !gp1.leftBumper().onTrue()) {
+//            slides.setPower(0);
+//        } else if (gp1.leftBumper().onTrue()) {
+//            slides.setPower(-1);
+//        } else if (gp1.leftBumper().onFalse() && !gp1.rightBumper().onTrue()) {
+//            slides.setPower(0);
+//        }
         if (gp1.dpadDown().onTrue() && Math.abs(slides.getPosition()) < 20) {
             f = zeroF;
             target = (0);
@@ -218,7 +219,7 @@ public class OutreachOpMode extends OpMode {
         double y = gp1.leftStickY().state();
         double x = gp1.leftStickX().state();
         double rx = gp1.rightStickX().state();
-        bobot.setMotorPowers(y, x, rx);
+        bobot.setMotorPowersSlow(y, x, rx);
 
         telemetry.addData("rightStick", rx);
     }
