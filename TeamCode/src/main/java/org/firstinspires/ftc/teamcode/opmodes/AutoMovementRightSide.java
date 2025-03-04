@@ -77,25 +77,17 @@ public class AutoMovementRightSide extends LinearOpMode  {
 
         Action clip = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
                 .stopAndAdd(new SequentialAction(new ParallelAction(clawWrist.clawWristSet(0.72), arm.setTarget(360))))
-                .waitSeconds(0.8)
+                .waitSeconds(0.5)
                 .stopAndAdd( slides.prepSlide())
                 .waitSeconds(1)
                 .stopAndAdd(slides.clipSlide())
-                .waitSeconds(0.5)
+                .waitSeconds(0.3)
                 .stopAndAdd(new ParallelAction(claw.openClaw(), slides.retractSlide()))
                 .build();
 
         Action wall = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
-                .stopAndAdd(arm.setTarget(210))
-                .waitSeconds(1)
-                .stopAndAdd(slides.runToPosition(2000))
-                .waitSeconds(1)
-                .stopAndAdd(slides.retractSlide())
-                .waitSeconds(1)
-                .stopAndAdd(clawWrist.clawWristSet(0.34))
-                .waitSeconds(1)
-                .stopAndAdd(claw.openClaw())
-                .waitSeconds(1)
+                .stopAndAdd(new ParallelAction(arm.setTarget(210), clawWrist.clawWristSet(0.34), claw.openClaw()))
+                .waitSeconds(2)
                 .stopAndAdd(claw.closeClaw())
                 .build();
 
@@ -137,7 +129,7 @@ public class AutoMovementRightSide extends LinearOpMode  {
 
 //        Actions.runBlocking(new ParallelAction(arm.runArm(),new SequentialAction(motion, clip)));
 //        Actions.runBlocking(new SequentialAction(new ParallelAction(clawWrist.clawWristUp(), slides.clipSlide()), new ParallelAction(claw.openClaw(), slides.retractSlide())));
-        Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(motion, clip)));
+        Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(motion, new SequentialAction(clip, wall))));
 //        Actions.runBlocking(clip);
 
     }
