@@ -11,15 +11,14 @@ import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
 public class ClawWrist {
     TwoPointServo clawWrist;
     public ClawWrist(HardwareMap hardwareMap) {
-        clawWrist =  new TwoPointServo(0.43, 0.72, 0.16, "clawWrist", hardwareMap);
-        clawWrist.positionA();
+        clawWrist =  new TwoPointServo(0.38, 0.7, 0.16, "clawWrist", hardwareMap);
     }
 
     public class ClawWristUp implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            clawWrist.positionA();
+            clawWrist.positionB();
             return false;
         }
     }
@@ -31,7 +30,7 @@ public class ClawWrist {
     public class ClawWristDown implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            clawWrist.positionB();
+            clawWrist.positionA();
             return false;
         }
     }

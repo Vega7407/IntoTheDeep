@@ -103,6 +103,37 @@ public class SlideAuto {
             return slide.isBusy();
         }
     }
+    public class sample1 implements Action {
+
+        public sample1() {
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            slide.runToPosition(1200, 1);
+            return slide.isBusy();
+        }
+    }
+
+    public Action sample1 () {
+        return new sample1();
+    }
+
+    public class sample2 implements Action {
+
+        public sample2() {
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            slide.runToPosition(100, 1);
+            return slide.isBusy();
+        }
+    }
+
+    public Action sample2 () {
+        return new sample2();
+    }
 
     public class RunToPosition implements Action {
 

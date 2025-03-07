@@ -94,6 +94,11 @@ public class Arm {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             controller.setTargetPosition(newTarget);
+            if (newTarget == 0) {
+                f = zeroF;
+            } else {
+                f = normalF;
+            }
             return false;
         }
     }
