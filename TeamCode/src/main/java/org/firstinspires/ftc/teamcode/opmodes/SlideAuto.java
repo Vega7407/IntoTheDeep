@@ -67,7 +67,7 @@ public class SlideAuto {
 
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
-            slide.runToPosition(460, 1);
+            slide.runToPosition(390, 1);
             return slide.isBusy();
         }
     }
@@ -95,11 +95,12 @@ public class SlideAuto {
     public class extendSlide implements Action {
 
         public extendSlide () {
-            slide.runToPosition(3000, 1);
+
         }
 
         @Override
         public boolean run (@NonNull TelemetryPacket packet) {
+            slide.runToPosition(3000, 1);
             return slide.isBusy();
         }
     }

@@ -20,26 +20,35 @@ public class MeepMeepTesting {
         Pose2d blueRight = new Pose2d(13.0, 61.0, down);
         Pose2d blueLeft = new Pose2d(-13.0, 61.0, down);
         Pose2d redRight = new Pose2d(9.0, -61.0, down);
-        Pose2d redLeft = new Pose2d(-13.0, -61.0, up);
+        Pose2d redLeft = new Pose2d(-15.0, -61.0, up);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(redRight)
-                .strafeToConstantHeading(new Vector2d(1.2, -32.8))
+        myBot.runAction(myBot.getDrive().actionBuilder(redLeft)
+                        .setTangent(up)
+                // go to basket
+                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
+                // go to right sample
                 .waitSeconds(1)
-                .setTangent(down)
-                .splineTo(new Vector2d(51.2, -47.5), up)
-                .turnTo(down)
-                .turnTo((up * 0.8))
-                .turnTo(down)
-                .strafeTo(new Vector2d(51, -65))
-                .waitSeconds(0.1)
-                .setTangent(down)
-
-                .strafeToConstantHeading(new Vector2d(1.2, -35.2))
+                .splineTo(new Vector2d(-49.5, -42), up)
+                // go to basket
+                .waitSeconds(1)
+                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
+                // go to middle sample
+                        .waitSeconds(1)
+                .splineTo(new Vector2d(-58.5, -42), up)
+                // go to basket
+                .waitSeconds(1)
+                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
+                // go to left sample
+                .waitSeconds(1)
+                .strafeToSplineHeading(new Vector2d(-57.6, -40.0), up * 1.4)
+                // go to basket
+                .waitSeconds(1)
+                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
 //                .strafeTo(new Vector2d(3.2, -34.2))
 //                .strafeTo(new Vector2d(26.3, -34.2))
 //                .setTangent(up)
