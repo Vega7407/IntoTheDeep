@@ -19,7 +19,7 @@ public class MeepMeepTesting {
 
         Pose2d blueRight = new Pose2d(13.0, 61.0, down);
         Pose2d blueLeft = new Pose2d(-13.0, 61.0, down);
-        Pose2d redRight = new Pose2d(13.0, -61.0, down);
+        Pose2d redRight = new Pose2d(9.0, -61.0, down);
         Pose2d redLeft = new Pose2d(-13.0, -61.0, up);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -28,20 +28,18 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(redRight)
-                .setTangent(down)
-                .splineToConstantHeading(new Vector2d(1.2, -40.2), down)
+                .strafeToConstantHeading(new Vector2d(1.2, -32.8))
                 .waitSeconds(1)
                 .setTangent(down)
-                .splineTo(new Vector2d(23.6, -47.4), up / 5)
-                .splineTo(new Vector2d(58.5, -42.5), up * 0.6)
-                .waitSeconds(0.4)
+                .splineTo(new Vector2d(51.2, -47.5), up)
                 .turnTo(down)
-                .turnTo((up * 1.1))
+                .turnTo((up * 0.8))
                 .turnTo(down)
-                .strafeTo(new Vector2d(58, -78))
+                .strafeTo(new Vector2d(51, -65))
                 .waitSeconds(0.1)
                 .setTangent(down)
-                .splineToConstantHeading(new Vector2d(1.2, -35.2), down)
+
+                .strafeToConstantHeading(new Vector2d(1.2, -35.2))
 //                .strafeTo(new Vector2d(3.2, -34.2))
 //                .strafeTo(new Vector2d(26.3, -34.2))
 //                .setTangent(up)
