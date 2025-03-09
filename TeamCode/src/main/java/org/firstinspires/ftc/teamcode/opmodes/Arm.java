@@ -49,7 +49,7 @@ public class Arm {
             double distanceFromTop = (Math.abs(position - 370) / 100);
 //            Log.d("VEGAff", "v " + velocity + " p " + position + " factor " + distanceFromTop);
             if (velocity != null && position > 100) {
-                double ff = (position > 370 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * f * (1 + (slides.getPosition()/20.0));
+                double ff = (position > 370 ? 1.0 : -1.0) * distanceFromTop * Math.abs(velocity / 1000) * -0.05 * (1 + (slides.getPosition()/20.0));
                 Log.d("VEGAff", "positive case " + ff);
                 return ff;
             }
@@ -62,15 +62,12 @@ public class Arm {
     public class RunArm implements Action {
 
         public RunArm () {
-
-        }
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            f = normalF;
             coefficients.setKP(p);
             coefficients.setKI(i);
             coefficients.setKD(d);
-
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
             armPos = armMotor1.getPosition();
             double power = controller.update(System.nanoTime(), armPos, armMotor1.getVelocity());
 //        Log.d("vega", "motor test " + power + " pos " + slideMoztor.getPosition() + " velocity " + slideMotor.getVelocity());
@@ -95,9 +92,9 @@ public class Arm {
         public boolean run(@NonNull TelemetryPacket packet) {
             controller.setTargetPosition(newTarget);
             if (newTarget == 0) {
-                f = zeroF;
+                coefficients.setKP(p/2);
             } else {
-                f = normalF;
+                coefficients.setKP(p);
             }
             return false;
         }
@@ -106,6 +103,26 @@ public class Arm {
         return new SetTarget(target);
     }
 
+    public class SetF implements Action {
+        int newTarget = 0;
+        public SetF (int goal) {
+            newTarget = goal;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            controller.setTargetPosition(newTarget);
+            if (newTarget == 0) {
+                f = -.2;
+            } else {
+                f = normalF;
+            }
+            return false;
+        }
+    }
+    public Action setF(int target){
+        return new SetF(target);
+    }
 
 }
 

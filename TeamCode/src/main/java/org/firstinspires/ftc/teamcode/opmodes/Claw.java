@@ -12,7 +12,7 @@ public class Claw {
     TwoPointServo claw;
     TwoPointServo clawWrist;
     public Claw (HardwareMap hardwareMap) {
-        claw = new TwoPointServo(0.38, 0.15, 1, "claw", hardwareMap);
+        claw = new TwoPointServo(0.445, 0.12, 1, "claw", hardwareMap);
         clawWrist =  new TwoPointServo(0.43, 0.72, 0.16, "clawWrist", hardwareMap);
     }
     public class CloseClaw implements Action {

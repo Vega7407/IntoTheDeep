@@ -67,8 +67,8 @@ public class AllStuffPIDNewBot extends OpMode {
     @Override
     public void init() {
         gp1 = new SDKGamepad(gamepad1);
-        claw = new TwoPointServo(0.38, 0.15, 1, "claw", hardwareMap);
-        clawWrist =  new TwoPointServo(0.38, 0.7, 0.16, "clawWrist", hardwareMap);
+        claw = new TwoPointServo(0.445, 0.12, 1, "claw", hardwareMap);
+        clawWrist =  new TwoPointServo(0.3, 0.62, 0.16, "clawWrist", hardwareMap);
         sweep = new TwoPointServo(0.31, 0.34, 0.7, "sweep", hardwareMap);
         slides = new Slide(hardwareMap);
         armMotor1 = new Motor(hardwareMap.get(DcMotorEx.class, "armMotor1"));
@@ -141,7 +141,10 @@ public class AllStuffPIDNewBot extends OpMode {
             clawWristToggle = !clawWristToggle;
             Log.d("vega", "claw wrist toggle " + clawWristToggle);
         }
-
+        if (gp1.start().onTrue()) {
+            target = 460;
+            controller.setTargetPosition(target);
+        }
         if (gp1.b().onTrue()) {
             f = 0.01;
             target = (360);
@@ -190,7 +193,7 @@ public class AllStuffPIDNewBot extends OpMode {
             coefficients.setKP(p);
             runningActions.add(slides.retractSlide());
             controller.setTargetPosition(target);
-            clawWrist.setPosition(0.3);
+            clawWrist.setPosition(0.21);
         } else if (Math.abs(armMotor1.getPosition()) < 20 && slides.getPosition() > 1900) {
             if (gp1.leftBumper().onTrue()) {
 

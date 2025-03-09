@@ -76,10 +76,10 @@ public class AutoMovementRightSide extends LinearOpMode  {
                 .build();
 
         Action clip = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
-                .stopAndAdd(new SequentialAction(new ParallelAction(clawWrist.clawWristSet(0.72), arm.setTarget(340))))
+                .stopAndAdd(new SequentialAction(new ParallelAction(clawWrist.clawWristUp(), arm.setTarget(340))))
                 .waitSeconds(1)
                 .stopAndAdd( slides.prepSlide())
-                .waitSeconds(.3)
+                .waitSeconds(.15)
                 .stopAndAdd(slides.clipSlide())
                 .waitSeconds(0.1)
                 .stopAndAdd(new SequentialAction(new ParallelAction(claw.openClaw(), slides.retractSlide()), new ParallelAction(clawWrist.clawWristUp(), arm.setTarget(0))))
@@ -94,49 +94,56 @@ public class AutoMovementRightSide extends LinearOpMode  {
 
         Action test = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
                 .stopAndAdd(slides.clipSlide())
-                .waitSeconds(1)
+                .waitSeconds(0.5)
                 .stopAndAdd(slides.retractSlide())
                 .build();
         Action grabColor = bobot.drive.actionBuilder(redRight)
                 .strafeTo(new Vector2d(1.2, -40.2))
-                .waitSeconds(2)
-                .strafeTo(new Vector2d(5.3, -43))
-                .strafeTo(new Vector2d(64.3, -52))
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(5.3, -48))
+                .strafeTo(new Vector2d(61.3, -51.5))
                 .build();
 
         Action grabAndDrop = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
                 .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
-                .turnTo(Math.PI * 1.2)
+                .turnTo(Math.PI * 1.15)
                 .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
                 .waitSeconds(0.4)
                 .turnTo(0)
+                // drop #1
                 .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw(), slides.sample2()))
-                .turnTo(Math.PI * 1.02)
+
+                .turnTo(Math.PI * 0.99)
                 .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
                 .waitSeconds(0.2)
                 .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
                 .waitSeconds(0.4)
-                .turnTo(Math.PI * 1.5)
-                .turnTo(0)
+                .turnTo(Math.PI * 1.1)
+                .turnTo(Math.PI * 0.02)
+                // drop #2
                 .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw(), slides.sample2()))
-                .turnTo((Math.PI * 0.7))
+                .turnTo((Math.PI * 0.86))
                 .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
                 .waitSeconds(0.2)
                 .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
                 .waitSeconds(0.4)
-                .turnTo(Math.PI * 1.5)
-                .turnTo(0)
-                .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw(), slides.sample2()))
-//                .stopAndAdd(wall)
-//                .strafeTo(new Vector2d(5, 0))
-//                .stopAndAdd(clip)
-//                .strafeTo(new Vector2d(-20, -20))
-//                .waitSeconds(2)
-//                .stopAndAdd(wall)
-//                .strafeTo(new Vector2d(5, 0))
-//                .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw()))
+                .stopAndAdd(slides.retractSlide())
+                .turnTo(-Math.PI * 0.02)
+                .stopAndAdd( claw.openClaw())
+                .stopAndAdd(new ParallelAction(arm.setTarget(245), clawWrist.clawWristSet(0.21)))
+                .strafeTo(new Vector2d(33, 0))
+                .waitSeconds(1)
+                .stopAndAdd(claw.closeClaw())
+                .waitSeconds(0.5)
+                .strafeTo(new Vector2d(-5, -65))
+                .stopAndAdd(clip)
+                .waitSeconds(3)
+                .strafeTo(new Vector2d(30, 0))
+                .waitSeconds(1.5)
+                .stopAndAdd(wall)
+                .strafeTo(new Vector2d(-5, -65))
+                .stopAndAdd(wall)
 //
-//                .stopAndAdd(clawWrist.clawWristDown())
 //                .strafeTo(new Vector2d(0, 8))
 //                .waitSeconds(0.2)
 //
@@ -153,7 +160,7 @@ public class AutoMovementRightSide extends LinearOpMode  {
 //                .waitSeconds(0.4)
 //                .splineTo(new Vector2d(25, 13), 0)
 //                .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw()))
-                .build();
+//                .build();
 //        Action motion = bobot.drive.actionBuilder(redRight)
 //                .strafeTo(new Vector2d(5.2, -40.2))
 //                .waitSeconds(2)
@@ -165,9 +172,9 @@ public class AutoMovementRightSide extends LinearOpMode  {
 //                .strafeTo(new Vector2d(56, -20))
 //                .strafeTo(new Vector2d(70, -20))
 //                .strafeTo(new Vector2d(70, -65.0))
-//                .build();
+                .build();
 
-        Actions.runBlocking(claw.closeClaw());
+        Actions.runBlocking(new ParallelAction(claw.closeClaw(), clawWrist.clawWristSet(0.23)));
 
         waitForStart();
 
@@ -177,6 +184,7 @@ public class AutoMovementRightSide extends LinearOpMode  {
         Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(new SequentialAction(grabColor, grabAndDrop), clip)));
 //            Actions.runBlocking(grabAndDrop);
 //        Actions.runBlocking(clip);
+//        Actions.runBlocking(new ParallelAction(arm.runArm(), arm.setTarget(260), clawWrist.clawWristSet(0.34)));
 
     };
 }
