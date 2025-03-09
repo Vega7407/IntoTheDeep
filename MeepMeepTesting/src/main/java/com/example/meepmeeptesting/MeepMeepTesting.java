@@ -1,6 +1,9 @@
 package com.example.meepmeeptesting;
 
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -16,7 +19,7 @@ public class MeepMeepTesting {
 
         Pose2d blueRight = new Pose2d(13.0, 61.0, down);
         Pose2d blueLeft = new Pose2d(-13.0, 61.0, down);
-        Pose2d redRight = new Pose2d(13.0, -61.0, up);
+        Pose2d redRight = new Pose2d(13.0, -61.0, down);
         Pose2d redLeft = new Pose2d(-13.0, -61.0, up);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -25,27 +28,34 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(redRight)
-                .strafeTo(new Vector2d(3.2, -34.2))
-                .strafeTo(new Vector2d(26.3, -34.2))
-                .setTangent(up)
-                .splineTo(new Vector2d(46.5, -9.9), down)
-                .strafeTo(new Vector2d(46.5, -60.0))
-                .strafeTo(new Vector2d(46.5, -9.9))
-                .strafeTo(new Vector2d(55.5, -9.9))
-                .strafeTo(new Vector2d(55.5, -60.0))
-                .strafeTo(new Vector2d(55.5, -9.9))
-                .strafeTo(new Vector2d(62.3 , -9.9))
-                .strafeTo(new Vector2d(62.3, -62.0))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(2.3, -38.1))
-                .strafeTo(new Vector2d(3.2, -33.5))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(46.5, -62.0))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(2.3, -38.1))
-                .strafeTo(new Vector2d(3.2, -33.5))
-                .waitSeconds(0.2)
-                .strafeTo(new Vector2d(46.5, -62.0))
+                .strafeTo(new Vector2d(1.2, -40.2))
+                .waitSeconds(1)
+                .setTangent(down)
+                .splineTo(new Vector2d(23.6, -47.4), up / 5)
+                .splineTo(new Vector2d(58.5, -42.5), up * 0.6)
+                .waitSeconds(0.4)
+                .turnTo(down)
+//                .strafeTo(new Vector2d(3.2, -34.2))
+//                .strafeTo(new Vector2d(26.3, -34.2))
+//                .setTangent(up)
+//                .splineTo(new Vector2d(46.5, -9.9), down)
+//                .strafeTo(new Vector2d(46.5, -60.0))
+//                .strafeTo(new Vector2d(46.5, -9.9))
+//                .strafeTo(new Vector2d(55.5, -9.9))
+//                .strafeTo(new Vector2d(55.5, -60.0))
+//                .strafeTo(new Vector2d(55.5, -9.9))
+//                .strafeTo(new Vector2d(62.3 , -9.9))
+//                .strafeTo(new Vector2d(62.3, -62.0))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(2.3, -38.1))
+//                .strafeTo(new Vector2d(3.2, -33.5))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(46.5, -62.0))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(2.3, -38.1))
+//                .strafeTo(new Vector2d(3.2, -33.5))
+//                .waitSeconds(0.2)
+//                .strafeTo(new Vector2d(46.5, -62.0))
                 .build());
                 /*.lineToX(30)
                 .turn(Math.toRadians(90))

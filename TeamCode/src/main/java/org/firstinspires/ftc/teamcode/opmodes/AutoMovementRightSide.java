@@ -76,14 +76,13 @@ public class AutoMovementRightSide extends LinearOpMode  {
                 .build();
 
         Action clip = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
-                .stopAndAdd(new SequentialAction(new ParallelAction(clawWrist.clawWristUp(), arm.setTarget(340))))
+                .stopAndAdd(new ParallelAction(clawWrist.clawWristUp(), arm.setTarget(340)))
                 .waitSeconds(1)
                 .stopAndAdd( slides.prepSlide())
                 .waitSeconds(.15)
                 .stopAndAdd(slides.clipSlide())
-                .waitSeconds(0.1)
-                .stopAndAdd(new SequentialAction(new ParallelAction(claw.openClaw(), slides.retractSlide()), new ParallelAction(clawWrist.clawWristUp(), arm.setTarget(0))))
-                .waitSeconds(10)
+                .waitSeconds(0.05)
+                .stopAndAdd(new SequentialAction(new ParallelAction(claw.openClaw(), slides.retractSlide()), clawWrist.clawWristUp()))
                 .build();
 
         Action wall = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
@@ -94,41 +93,74 @@ public class AutoMovementRightSide extends LinearOpMode  {
 
         Action test = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
                 .stopAndAdd(slides.clipSlide())
-                .waitSeconds(0.5)
+                .waitSeconds(0.1)
                 .stopAndAdd(slides.retractSlide())
                 .build();
         Action grabColor = bobot.drive.actionBuilder(redRight)
                 .strafeTo(new Vector2d(1.2, -40.2))
                 .waitSeconds(1)
-                .strafeTo(new Vector2d(5.3, -48))
-                .strafeTo(new Vector2d(61.3, -51.5))
-                .build();
-
-        Action grabAndDrop = bobot.drive.actionBuilder(new Pose2d(0, 0, 0))
+                .stopAndAdd(arm.setTarget(0))
+                .setTangent(down)
+                .splineTo(new Vector2d(23.6, -47.4), up / 5)
+                .splineTo(new Vector2d(58, -48.8), up * 0.6)
+                .turnTo(up * 1.1)
                 .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
-                .turnTo(Math.PI * 1.15)
                 .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
                 .waitSeconds(0.4)
-                .turnTo(0)
+                .turnTo(down)
                 // drop #1
                 .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw(), slides.sample2()))
-
-                .turnTo(Math.PI * 0.99)
+                .turnTo(up * 0.75)
                 .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
                 .waitSeconds(0.2)
                 .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
                 .waitSeconds(0.4)
-                .turnTo(Math.PI * 1.1)
-                .turnTo(Math.PI * 0.02)
+                .turnTo(up * 1.5)
+                .turnTo(down)
                 // drop #2
                 .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw(), slides.sample2()))
-                .turnTo((Math.PI * 0.86))
+                .turnTo((up * 0.3))
                 .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
                 .waitSeconds(0.2)
                 .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
                 .waitSeconds(0.4)
                 .stopAndAdd(slides.retractSlide())
-                .turnTo(-Math.PI * 0.02)
+                .turnTo(down)
+                .stopAndAdd( claw.openClaw())
+                .stopAndAdd(new ParallelAction(arm.setTarget(256), clawWrist.clawWristSet(0.21)))
+                .strafeTo(new Vector2d(58, -75))
+                .waitSeconds(0.5)
+                .stopAndAdd(claw.closeClaw())
+                .waitSeconds(0.2)
+                .stopAndAdd(new ParallelAction(clawWrist.clawWristUp(), arm.setTarget(340)))
+                .strafeTo(new Vector2d(50, -60))
+                .strafeTo(new Vector2d(1.2, -40.2))
+                .waitSeconds(1)
+                .stopAndAdd( slides.prepSlide())
+                .waitSeconds(.15)
+                .stopAndAdd(slides.clipSlide())
+                .waitSeconds(0.05)
+                .stopAndAdd(new SequentialAction(new ParallelAction(claw.openClaw(), slides.retractSlide()), clawWrist.clawWristUp()))
+                .build();
+
+        Action grabAndDrop = bobot.drive.actionBuilder(new Pose2d(0, 0, down))
+//                // drop #1
+//                .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw(), slides.sample2()))
+//                .turnTo(up)
+//                .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
+//                .waitSeconds(0.2)
+//                .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
+//                .waitSeconds(0.4)
+//                .turnTo(0)
+//                // drop #2
+//                .stopAndAdd( new ParallelAction(clawWrist.clawWristUp(), claw.openClaw(), slides.sample2()))
+//                .turnTo((up * 0.86))
+//                .stopAndAdd(new ParallelAction(clawWrist.clawWristDown(), claw.openClaw()))
+//                .waitSeconds(0.2)
+//                .stopAndAdd(new SequentialAction(slides.sample1(), claw.closeClaw()))
+//                .waitSeconds(0.4)
+//                .stopAndAdd(slides.retractSlide())
+//                .turnTo(0)
                 .stopAndAdd( claw.openClaw())
                 .stopAndAdd(new ParallelAction(arm.setTarget(245), clawWrist.clawWristSet(0.21)))
                 .strafeTo(new Vector2d(33, 0))
@@ -181,7 +213,8 @@ public class AutoMovementRightSide extends LinearOpMode  {
 //        Actions.runBlocking(new ParallelAction(arm.runArm(),new SequentialAction(motion, clip)));
 //        Actions.runBlocking(new SequentialAction(new ParallelAction(clawWrist.clawWristUp(), slides.clipSlide()), new ParallelAction(claw.openClaw(), slides.retractSlide())));
 //        Actions.runBlocking(motion);
-        Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(new SequentialAction(grabColor, grabAndDrop), clip)));
+//        Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(new SequentialAction(grabColor, grabAndDrop), clip)));
+        Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(new SequentialAction(grabColor), clip)));
 //            Actions.runBlocking(grabAndDrop);
 //        Actions.runBlocking(clip);
 //        Actions.runBlocking(new ParallelAction(arm.runArm(), arm.setTarget(260), clawWrist.clawWristSet(0.34)));
