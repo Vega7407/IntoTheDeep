@@ -73,15 +73,24 @@ public class AutoMovementLeftSide extends LinearOpMode  {
                 .build();
 
         Action actionAuton = bobot.drive.actionBuilder(redLeft)
-                .afterTime(3, basket)
-                .afterTime(8, floor)
+                .afterTime(2, basket)
+                .afterTime(7.5, floor)
+                .afterTime(11.5, basket)
+                .afterTime(17, floor)
+                .afterTime(20, basket)
+                .afterTime(25, floor)
+                .afterTime(28, basket)
                 .build();
 
         Action moveAuton = bobot.drive.actionBuilder(redLeft)
                 // go to basket
                 .strafeToSplineHeading(new Vector2d(-57.6, -52.2), up * 0.55)
+                .afterTime(0, basket)
+                .waitSeconds(2)
                 // go to right sample
                 .strafeToSplineHeading(new Vector2d(-49.5, -42), up)
+                .afterTime(0, floor)
+                .waitSeconds(1.5)
                 // go to basket
                 .strafeToSplineHeading(new Vector2d(-56.5, -50), up * 0.5)
                 // go to middle sample
@@ -97,7 +106,7 @@ public class AutoMovementLeftSide extends LinearOpMode  {
                 .stopAndAdd(arm.setTarget(360))
                 .build();
 
-        Actions.runBlocking(new ParallelAction(claw.closeClaw(), clawWrist.clawWristUp()));
+        Actions.runBlocking(new ParallelAction(claw.closeClaw(), clawWrist.clawWristSet(0.85)));
 
         waitForStart();
 
@@ -105,7 +114,8 @@ public class AutoMovementLeftSide extends LinearOpMode  {
 //        Actions.runBlocking(new SequentialAction(new ParallelAction(clawWrist.clawWristUp(), slides.clipSlide()), new ParallelAction(claw.openClaw(), slides.retractSlide())));
 //        Actions.runBlocking(motion);
 //        Actions.runBlocking(new ParallelAction(arm.runArm(), new ParallelAction(new SequentialAction(grabColor, grabAndDrop), clip)));
-        Actions.runBlocking(new ParallelAction(arm.runArm(),moveAuton));
+//        Actions.runBlocking(new ParallelAction(arm.runArm(), moveAuton, actionAuton));
+            Actions.runBlocking(new ParallelAction(arm.runArm(), moveAuton));
 //            Actions.runBlocking(grabAndDrop);
 //        Actions.runBlocking(clip);
 //        Actions.runBlocking(new ParallelAction(arm.runArm(), arm.setTarget(260), clawWrist.clawWristSet(0.34)));
