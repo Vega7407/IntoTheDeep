@@ -53,93 +53,48 @@ public class AutoMovementLeftSide extends LinearOpMode  {
                 .build();
 
         Action basket = bobot.drive.actionBuilder(redLeft)
-                .stopAndAdd(new ParallelAction(arm.setTarget(360), clawWrist.clawWristDown()))
+                .stopAndAdd(new ParallelAction(arm.setTarget(375), clawWrist.clawWristDown()))
                 .waitSeconds(0.3)
                 .stopAndAdd(slides.extendSlide())
-                .waitSeconds(0.2)
-                .stopAndAdd(clawWrist.clawWristUp())
                 .waitSeconds(0.15)
+                .stopAndAdd(clawWrist.clawWristUp())
+                .waitSeconds(0.23)
                 .stopAndAdd(claw.openClaw())
                 .waitSeconds(0.4)
                 .stopAndAdd(slides.retractSlide())
-                .waitSeconds(0.5)
                 .stopAndAdd(arm.setTarget(0))
+                .build();
+
+        Action floor = bobot.drive.actionBuilder(redLeft)
+                .stopAndAdd(new ParallelAction( clawWrist.clawWristDown(), slides.sample1()))
+                .stopAndAdd(claw.closeClaw())
+                .waitSeconds(0.4)
+                .stopAndAdd(slides.retractSlide())
+                .build();
+
+        Action actionAuton = bobot.drive.actionBuilder(redLeft)
+                .afterTime(3, basket)
+                .afterTime(8, floor)
                 .build();
 
         Action moveAuton = bobot.drive.actionBuilder(redLeft)
                 // go to basket
                 .strafeToSplineHeading(new Vector2d(-57.6, -52.2), up * 0.55)
-                .waitSeconds(1)
-                .stopAndAdd(basket)
                 // go to right sample
-                .waitSeconds(1)
                 .strafeToSplineHeading(new Vector2d(-49.5, -42), up)
-                .stopAndAdd(new ParallelAction( clawWrist.clawWristDown(), slides.sample1()))
-                .waitSeconds(0.15)
-                .stopAndAdd(claw.closeClaw())
-                .waitSeconds(0.4)
-                .stopAndAdd(slides.retractSlide())
                 // go to basket
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-57, -50), up * 0.5)
-                //basket
-                .stopAndAdd(new ParallelAction(arm.setTarget(360), clawWrist.clawWristDown()))
-                .waitSeconds(0.3)
-                .stopAndAdd(slides.extendSlide())
-                .waitSeconds(0.2)
-                .stopAndAdd(clawWrist.clawWristUp())
-                .waitSeconds(0.15)
-                .stopAndAdd(claw.openClaw())
-                .waitSeconds(0.4)
-                .stopAndAdd(slides.retractSlide())
-                .waitSeconds(0.5)
-                .stopAndAdd(arm.setTarget(0))
+                .strafeToSplineHeading(new Vector2d(-56.5, -50), up * 0.5)
                 // go to middle sample
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-58.5, -42), up)
-                .stopAndAdd(new ParallelAction( clawWrist.clawWristDown(), slides.sample1()))
-                .waitSeconds(0.15)
-                .stopAndAdd(claw.closeClaw())
-                .waitSeconds(0.4)
-                .stopAndAdd(slides.retractSlide())
+                .strafeToSplineHeading(new Vector2d(-58.5, -41.5), up)
                 // go to basket
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-56, -49), up * 0.5)
-                //basket
-                .stopAndAdd(new ParallelAction(arm.setTarget(360), clawWrist.clawWristDown()))
-                .waitSeconds(0.3)
-                .stopAndAdd(slides.extendSlide())
-                .waitSeconds(0.2)
-                .stopAndAdd(clawWrist.clawWristUp())
-                .waitSeconds(0.15)
-                .stopAndAdd(claw.openClaw())
-                .waitSeconds(0.4)
-                .stopAndAdd(slides.retractSlide())
-                .waitSeconds(0.5)
-                .stopAndAdd(arm.setTarget(0))
+                .strafeToSplineHeading(new Vector2d(-56, -48), up * 0.5)
                 // go to left sample
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-57.6, -40.0), up * 1.4)
-                .stopAndAdd(new ParallelAction( clawWrist.clawWristDown(), slides.sample1()))
-                .waitSeconds(0.15)
-                .stopAndAdd(claw.closeClaw())
-                .waitSeconds(0.4)
-                .stopAndAdd(slides.retractSlide())
+                .strafeToSplineHeading(new Vector2d(-57.6, -37.0), up * 1.4)
                 // go to basket
-                .waitSeconds(1)
                 .strafeToSplineHeading(new Vector2d(-58, -52.2), up * 0.5)
-                //basket
-                .stopAndAdd(new ParallelAction(arm.setTarget(360), clawWrist.clawWristDown()))
-                .waitSeconds(0.3)
-                .stopAndAdd(slides.extendSlide())
-                .waitSeconds(0.2)
-                .stopAndAdd(clawWrist.clawWristUp())
-                .waitSeconds(0.15)
-                .stopAndAdd(claw.openClaw())
-                .waitSeconds(0.4)
-                .stopAndAdd(slides.retractSlide())
-                .waitSeconds(0.5)
-                .stopAndAdd(arm.setTarget(0))
+                // level 1 ascent
+                .strafeToSplineHeading(new Vector2d(-24.1, -4.2), -Math.PI)
+                .stopAndAdd(arm.setTarget(360))
                 .build();
 
         Actions.runBlocking(new ParallelAction(claw.closeClaw(), clawWrist.clawWristUp()));

@@ -30,25 +30,20 @@ public class MeepMeepTesting {
         myBot.runAction(myBot.getDrive().actionBuilder(redLeft)
                         .setTangent(up)
                 // go to basket
-                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
+                .strafeToSplineHeading(new Vector2d(-57.6, -52.2), up * 0.55)
                 // go to right sample
-                .waitSeconds(1)
-                .splineTo(new Vector2d(-49.5, -42), up)
+                .strafeToSplineHeading(new Vector2d(-49.5, -42), up)
                 // go to basket
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
+                .strafeToSplineHeading(new Vector2d(-56.5, -50), up * 0.5)
                 // go to middle sample
-                        .waitSeconds(1)
-                .splineTo(new Vector2d(-58.5, -42), up)
+                .strafeToSplineHeading(new Vector2d(-58.5, -41.5), up)
                 // go to basket
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
+                .strafeToSplineHeading(new Vector2d(-56, -48), up * 0.5)
                 // go to left sample
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-57.6, -40.0), up * 1.4)
+                .strafeToSplineHeading(new Vector2d(-57.6, -37.0), up * 1.4)
                 // go to basket
-                .waitSeconds(1)
-                .strafeToSplineHeading(new Vector2d(-49.5, -52.0), up * 0.5)
+                .strafeToSplineHeading(new Vector2d(-58, -52.2), up * 0.5)
+                                .strafeToSplineHeading(new Vector2d(-24.1, -4.2), -Math.PI)
 //                .strafeTo(new Vector2d(3.2, -34.2))
 //                .strafeTo(new Vector2d(26.3, -34.2))
 //                .setTangent(up)
