@@ -28,29 +28,60 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(redLeft)
-                // go to basket
-                .strafeToSplineHeading(new Vector2d(-57.6, -52.2), up * 0.55)
-                .waitSeconds(3.2)
-                // go to right sample
-                .strafeToSplineHeading(new Vector2d(-49.5, -42), up)
-                .waitSeconds(2)
-                // go to basket
-                .strafeToSplineHeading(new Vector2d(-56.5, -50), up * 0.5)
-                .waitSeconds(6)
-                // go to middle sample
-                .strafeToSplineHeading(new Vector2d(-58.5, -41.5), up)
-                .waitSeconds(1.5)
-                // go to basket
-                .strafeToSplineHeading(new Vector2d(-56, -48), up * 0.5)
-                .waitSeconds(0.5)
-                // go to left sample
-                .strafeToSplineHeading(new Vector2d(-57.6, -37.0), up * 1.4)
-                .waitSeconds(1.5)
-                // go to basket
-                .strafeToSplineHeading(new Vector2d(-58, -52.2), up * 0.5)
-                .waitSeconds(0.5)
-                // level 1 ascent
-                .strafeToSplineHeading(new Vector2d(-24.1, -4.2), -Math.PI)
+                // right side
+                .strafeToConstantHeading(new Vector2d(-8, -38.8))
+                .waitSeconds(1)
+                .setTangent(down)
+                .splineTo(new Vector2d(40.5, -45), up * 1.1)
+                .waitSeconds(0.4)
+                .turnTo(down)
+
+                .waitSeconds(0.3)
+                .turnTo((up * 0.78))
+
+                .waitSeconds(0.3)
+                .turnTo(down)
+                .waitSeconds(0.3)
+                // drop and dpad_right or up to wall
+
+                .strafeTo(new Vector2d(49, -67))
+                .waitSeconds(0.2)
+                        .setTangent(up)
+                .splineToConstantHeading(new Vector2d(-5, -26.2), up)
+                .waitSeconds(0.2)
+                .strafeTo(new Vector2d(45, -69))
+                .waitSeconds(0.2)
+                .strafeToConstantHeading(new Vector2d(0, -25))
+                .waitSeconds(0.2)
+                .strafeTo(new Vector2d(45, -7))
+                .waitSeconds(0.2)
+                .strafeToConstantHeading(new Vector2d(6, -25))
+
+
+//              left side
+//                // go to basket
+//                .strafeToSplineHeading(new Vector2d(-57.6, -52.2), up * 0.55)
+//                .waitSeconds(3.2)
+//                // go to right sample
+//                .strafeToSplineHeading(new Vector2d(-49.5, -42), up)
+//                .waitSeconds(2)
+//                // go to basket
+//                .strafeToSplineHeading(new Vector2d(-56.5, -50), up * 0.5)
+//                .waitSeconds(6)
+//                // go to middle sample
+//                .strafeToSplineHeading(new Vector2d(-58.5, -41.5), up)
+//                .waitSeconds(1.5)
+//                // go to basket
+//                .strafeToSplineHeading(new Vector2d(-56, -48), up * 0.5)
+//                .waitSeconds(0.5)
+//                // go to left sample
+//                .strafeToSplineHeading(new Vector2d(-57.6, -37.0), up * 1.4)
+//                .waitSeconds(1.5)
+//                // go to basket
+//                .strafeToSplineHeading(new Vector2d(-58, -52.2), up * 0.5)
+//                .waitSeconds(0.5)
+//                // level 1 ascent
+//                .strafeToSplineHeading(new Vector2d(-24.1, -4.2), -Math.PI)
 //                .strafeTo(new Vector2d(3.2, -34.2))
 //                .strafeTo(new Vector2d(26.3, -34.2))
 //                .setTangent(up)
