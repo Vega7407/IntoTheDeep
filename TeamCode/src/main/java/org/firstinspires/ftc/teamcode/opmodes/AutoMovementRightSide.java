@@ -225,7 +225,7 @@ public class AutoMovementRightSide extends LinearOpMode  {
 //                .strafeTo(new Vector2d(70, -65.0))
                 .build();
 
-        Actions.runBlocking(new ParallelAction(claw.closeClaw(), clawWrist.clawWristSet(0.23)));
+        Actions.runBlocking(new ParallelAction(claw.closeClaw(), clawWrist.clawWristUp()));
 
         waitForStart();
 

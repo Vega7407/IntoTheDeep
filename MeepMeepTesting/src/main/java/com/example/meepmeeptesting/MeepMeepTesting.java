@@ -28,22 +28,29 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(redLeft)
-                        .setTangent(up)
                 // go to basket
                 .strafeToSplineHeading(new Vector2d(-57.6, -52.2), up * 0.55)
+                .waitSeconds(3.2)
                 // go to right sample
                 .strafeToSplineHeading(new Vector2d(-49.5, -42), up)
+                .waitSeconds(2)
                 // go to basket
                 .strafeToSplineHeading(new Vector2d(-56.5, -50), up * 0.5)
+                .waitSeconds(6)
                 // go to middle sample
                 .strafeToSplineHeading(new Vector2d(-58.5, -41.5), up)
+                .waitSeconds(1.5)
                 // go to basket
                 .strafeToSplineHeading(new Vector2d(-56, -48), up * 0.5)
+                .waitSeconds(0.5)
                 // go to left sample
                 .strafeToSplineHeading(new Vector2d(-57.6, -37.0), up * 1.4)
+                .waitSeconds(1.5)
                 // go to basket
                 .strafeToSplineHeading(new Vector2d(-58, -52.2), up * 0.5)
-                                .strafeToSplineHeading(new Vector2d(-24.1, -4.2), -Math.PI)
+                .waitSeconds(0.5)
+                // level 1 ascent
+                .strafeToSplineHeading(new Vector2d(-24.1, -4.2), -Math.PI)
 //                .strafeTo(new Vector2d(3.2, -34.2))
 //                .strafeTo(new Vector2d(26.3, -34.2))
 //                .setTangent(up)
