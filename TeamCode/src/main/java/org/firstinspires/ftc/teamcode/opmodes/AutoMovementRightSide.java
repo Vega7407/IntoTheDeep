@@ -23,20 +23,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.ejml.dense.row.mult.VectorVectorMult_CDRM;
 import org.firstinspires.ftc.teamcode.hardware.Chassis;
-import org.firstinspires.ftc.teamcode.hardware.Motor;
-import org.firstinspires.ftc.teamcode.hardware.Slide;
-import org.firstinspires.ftc.teamcode.hardware.TwoPointServo;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier;
-import dev.frozenmilk.dairy.core.util.supplier.numeric.EnhancedDoubleSupplier;
-import dev.frozenmilk.dairy.pasteurized.Pasteurized;
-import dev.frozenmilk.dairy.pasteurized.PasteurizedGamepad;
-import dev.frozenmilk.dairy.pasteurized.SDKGamepad;
-import dev.frozenmilk.mercurial.commands.groups.Parallel;
-import page.j5155.expressway.ftc.motion.FeedforwardFun;
 import page.j5155.expressway.ftc.motion.PIDFController;
 
 @Config

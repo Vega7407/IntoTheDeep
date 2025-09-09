@@ -133,7 +133,7 @@ public class AllStuffPID extends OpMode {
             controller.setTargetPosition(target);
         } else if (gp1.dpadDown().onTrue()) {
             f = zeroF;
-            target = (0);
+            target = (0); wo
             coefficients.setKP(p/1.5);
             controller.setTargetPosition(target);
         } else if (gp1.dpadRight().onTrue()) {
